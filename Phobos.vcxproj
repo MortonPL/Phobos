@@ -45,6 +45,7 @@
     <ClCompile Include="src\Ext\ParticleType\Body.cpp" />
     <ClCompile Include="src\Ext\ParticleType\Hooks.cpp" />
     <ClCompile Include="src\Ext\Scenario\Hooks.cpp" />
+    <ClCompile Include="src\Ext\Cell\Body.cpp" />
     <ClCompile Include="src\Ext\Scenario\Hooks.Variables.cpp" />
     <ClCompile Include="src\Ext\Sidebar\Body.cpp" />
     <ClCompile Include="src\Ext\Sidebar\Hooks.cpp" />
@@ -68,8 +69,11 @@
     <ClCompile Include="src\Misc\Hooks.Ares.cpp" />
     <ClCompile Include="src\Misc\Hooks.Crates.cpp" />
     <ClCompile Include="src\Misc\Hooks.VeinholeMonster.cpp" />
+    <ClCompile Include="src\Misc\FogOfWar.cpp" />
+    <ClCompile Include="src\Misc\MapRevealer.cpp" />
     <ClCompile Include="src\Misc\PhobosToolTip.cpp" />
     <ClCompile Include="src\Misc\TextInput.cpp" />
+    <ClCompile Include="src\New\Entity\FoggedObject.cpp" />
     <ClCompile Include="src\New\Entity\ShieldClass.cpp" />
     <ClCompile Include="src\Misc\RetryDialog.cpp" />
     <ClCompile Include="src\New\Type\Affiliated\DroppodTypeClass.cpp" />
@@ -200,6 +204,7 @@
     <ClInclude Include="src\Ext\Bullet\Trajectories\StraightTrajectory.h" />
     <ClInclude Include="src\Ext\OverlayType\Body.h" />
     <ClInclude Include="src\Ext\ParticleType\Body.h" />
+    <ClInclude Include="src\Ext\Cell\Body.h" />
     <ClInclude Include="src\Ext\Sidebar\Body.h" />
     <ClInclude Include="src\Ext\Anim\Body.h" />
     <ClInclude Include="src\Ext\Surface\Body.h" />
@@ -210,11 +215,13 @@
     <ClInclude Include="src\Misc\BlittersFix.h" />
     <ClInclude Include="src\Ext\CaptureManager\Body.h" />
     <ClInclude Include="src\Misc\FlyingStrings.h" />
+    <ClInclude Include="src\Misc\MapRevealer.h" />
     <ClInclude Include="src\Misc\PhobosToolTip.h" />
     <ClInclude Include="src\Misc\SyncLogging.h" />
     <ClInclude Include="src\New\Type\Affiliated\TypeConvertGroup.h" />
     <ClInclude Include="src\New\Type\Affiliated\DroppodTypeClass.h" />
     <ClInclude Include="src\New\Type\DigitalDisplayTypeClass.h" />
+    <ClInclude Include="src\New\Entity\FoggedObject.h" />
     <ClInclude Include="src\New\Type\RadTypeClass.h" />
     <ClInclude Include="src\New\Type\ShieldTypeClass.h" />
     <ClInclude Include="src\New\Type\LaserTrailTypeClass.h" />
