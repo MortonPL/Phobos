@@ -6,6 +6,8 @@
 #include <Utilities/TemplateDef.h>
 
 #include <Ext/Building/Body.h>
+#include <Ext/BuildingType/Body.h>
+#include <Ext/Scenario/Body.h>
 
 #include <map>
 
@@ -25,6 +27,7 @@ public:
 		BuildingClass* Factory_VehicleType;
 		BuildingClass* Factory_NavyType;
 		BuildingClass* Factory_AircraftType;
+		std::map<int, ExtendedVariable> Variables;
 
 		//Read from INI
 		bool RepairBaseNodes[3];
@@ -39,6 +42,7 @@ public:
 			, Factory_NavyType { nullptr }
 			, Factory_AircraftType { nullptr }
 			, RepairBaseNodes { false,false,false }
+			, Variables {}
 		{ }
 
 		bool OwnsLimboDeliveredBuilding(BuildingClass* pBuilding);
@@ -62,6 +66,8 @@ public:
 	private:
 		template <typename T>
 		void Serialize(T& Stm);
+
+		void ReadVariables(INI_EX exINI, const char* pSection);
 	};
 
 	class ExtContainer final : public Container<HouseExt> {

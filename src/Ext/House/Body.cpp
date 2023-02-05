@@ -109,6 +109,22 @@ void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 			this->RepairBaseNodes[i] = readBaseNodeRepairInfo[i < nWritten ? i : nWritten - 1];
 	}
 
+	ReadVariables(exINI, pSection);
+}
+
+void HouseExt::ExtData::ReadVariables(INI_EX exINI, const char* pSection)
+{
+	char tempBuffer[13];
+
+	for (int i = 0; i < INT_MAX; i++)
+	{
+		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Variable%d", i);
+		Nullable<PhobosFixedString<0x100>> temp;
+		temp.Read(exINI, pSection, tempBuffer);
+		if (!temp.isset())
+			break;
+
+	}
 }
 
 
@@ -128,6 +144,7 @@ void HouseExt::ExtData::Serialize(T& Stm)
 		.Process(this->Factory_NavyType)
 		.Process(this->Factory_AircraftType)
 		.Process(this->RepairBaseNodes)
+		.Process(this->Variables)
 		;
 }
 
