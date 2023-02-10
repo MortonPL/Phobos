@@ -94,6 +94,29 @@ void HouseExt::ExtData::UpdateAutoDeathObjectsInLimbo()
 	}
 }
 
+void HouseExt::ExtData::SetVariableToByID(int nIndex, char bState)
+{
+	auto& dict = this->Variables;
+
+	auto itr = dict.find(nIndex);
+
+	if (itr != dict.end() && itr->second.Value != bState)
+	{
+		itr->second.Value = bState;
+		ScenarioClass::Instance->VariablesChanged = true;
+		//TagClass::NotifyHouseVariableChanged(nIndex);
+	}
+}
+
+void HouseExt::ExtData::GetVariableStateByID(int nIndex, char* pOut)
+{
+	auto& dict = this->Variables;
+
+	auto itr = dict.find(nIndex);
+	if (itr != dict.end())
+		*pOut = static_cast<char>(itr->second.Value);
+}
+
 void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 {
 	const char* pSection = this->OwnerObject()->PlainName;
@@ -109,21 +132,27 @@ void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 			this->RepairBaseNodes[i] = readBaseNodeRepairInfo[i < nWritten ? i : nWritten - 1];
 	}
 
-	ReadVariables(exINI, pSection);
+	ReadVariables(pINI, pSection);
 }
 
-void HouseExt::ExtData::ReadVariables(INI_EX exINI, const char* pSection)
+void HouseExt::ExtData::ReadVariables(CCINIClass* const pINI, const char* pSection)
 {
 	char tempBuffer[13];
 
 	for (int i = 0; i < INT_MAX; i++)
 	{
 		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Variable%d", i);
-		Nullable<PhobosFixedString<0x100>> temp;
-		temp.Read(exINI, pSection, tempBuffer);
-		if (!temp.isset())
+		PhobosFixedString<0x100> temp;
+		temp.Read(pINI, pSection, tempBuffer);
+		if (!temp)
 			break;
-
+		auto& var = this->Variables[i];
+		char* buffer;
+		strcpy_s(var.Name, strtok_s(Phobos::readBuffer, ",", &buffer));
+		if (auto pState = strtok_s(nullptr, ",", &buffer))
+			var.Value = atoi(pState);
+		else
+			var.Value = 0;
 	}
 }
 

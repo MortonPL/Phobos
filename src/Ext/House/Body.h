@@ -8,6 +8,7 @@
 #include <Ext/Building/Body.h>
 #include <Ext/BuildingType/Body.h>
 #include <Ext/Scenario/Body.h>
+#include <Ext/HouseType/Body.h>
 
 #include <map>
 
@@ -43,10 +44,14 @@ public:
 			, Factory_AircraftType { nullptr }
 			, RepairBaseNodes { false,false,false }
 			, Variables {}
-		{ }
+		{
+			this->Variables = HouseTypeExt::ExtMap.Find(OwnerObject->Type)->Variables;
+		}
 
 		bool OwnsLimboDeliveredBuilding(BuildingClass* pBuilding);
 		void UpdateAutoDeathObjectsInLimbo();
+		void SetVariableToByID(int nIndex, char bState);
+		void GetVariableStateByID(int nIndex, char* pOut);
 
 		virtual ~ExtData() = default;
 
@@ -67,7 +72,7 @@ public:
 		template <typename T>
 		void Serialize(T& Stm);
 
-		void ReadVariables(INI_EX exINI, const char* pSection);
+		void ReadVariables(CCINIClass* const pINI, const char* pSection);
 	};
 
 	class ExtContainer final : public Container<HouseExt> {
