@@ -104,7 +104,7 @@ void HouseExt::ExtData::SetVariableToByID(int nIndex, char bState)
 	{
 		itr->second.Value = bState;
 		ScenarioClass::Instance->VariablesChanged = true;
-		//TagClass::NotifyHouseVariableChanged(nIndex);
+		//TagClass::NotifyHouseVariableChanged(nIndex); // TODO how do we handle tags?
 	}
 }
 

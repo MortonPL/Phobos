@@ -10,6 +10,7 @@
 #include <Utilities/SavegameDef.h>
 
 #include <Ext/Scenario/Body.h>
+#include <Ext/House/Body.h>
 
 //Static init
 template<> const DWORD Extension<TActionClass>::Canary = 0x91919191;
@@ -138,6 +139,45 @@ bool TActionExt::SaveGame(TActionClass* pThis, HouseClass* pHouse, ObjectClass* 
 	return true;
 }
 
+std::map<int, ExtendedVariable>* GetVariableMap(int type, int houseIndex = -1)
+{
+	if (type == 2)
+	{
+		auto pHouse = HouseClass::Array->GetItem(houseIndex);
+		if (!pHouse)
+			return nullptr;
+		return &HouseExt::ExtMap.Find(pHouse)->Variables;
+	}
+	else
+	{
+		return &ScenarioExt::Global()->Variables[type != 0];
+	}
+}
+
+std::map<int, ExtendedVariable>* GetVariableMap(int type, HouseClass* pHouse)
+{
+	if (type == 2)
+	{
+		if (!pHouse)
+			return nullptr;
+		return &HouseExt::ExtMap.Find(pHouse)->Variables;
+	}
+	else
+	{
+		return &ScenarioExt::Global()->Variables[type != 0];
+	}
+}
+
+void NotifyVariableChanged(int type, int value)
+{
+	if (type == 0)
+		TagClass::NotifyLocalChanged(value);
+	else if (type == 1)
+		TagClass::NotifyGlobalChanged(value);
+	else
+		;  // TODO how do we handle tags?
+}
+
 bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
 	// Variable Index
@@ -162,14 +202,18 @@ bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectCla
 	// The second value
 	// holds by pThis->Param4
 
-	// Global Variable or Local
-	// 0 for local and 1 for global
+	// Global Variable or Local or House
+	// 0 for local, 1 for global, 2 for house
 	// holds by pThis->Param5
 
-	// uses !pThis->Param5 to ensure Param5 is 0 or 1
-	auto& variables = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
-	auto itr = variables.find(pThis->Value);
-	if (itr != variables.end())
+	// House index for house variables
+	// holds by pThis->Param6
+
+	auto pVariables = GetVariableMap(pThis->Param5, pThis->Param6);
+	if (!pVariables)
+		return false;
+	auto itr = pVariables->find(pThis->Value);
+	if (itr != pVariables->end())
 	{
 		auto& nCurrentValue = itr->second.Value;
 		// variable being found
@@ -191,25 +235,21 @@ bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectCla
 			return true;
 		}
 
-		if (!pThis->Param5)
-			TagClass::NotifyLocalChanged(pThis->Value);
-		else
-			TagClass::NotifyGlobalChanged(pThis->Value);
+		NotifyVariableChanged(pThis->Param5, pThis->Value);
 	}
 	return true;
 }
 
 bool TActionExt::GenerateRandomNumber(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto& variables = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
-	auto itr = variables.find(pThis->Value);
-	if (itr != variables.end())
+	auto pVariables = GetVariableMap(pThis->Param5, pThis->Param6);
+	if (!pVariables)
+		return false;
+	auto itr = pVariables->find(pThis->Value);
+	if (itr != pVariables->end())
 	{
 		itr->second.Value = ScenarioClass::Instance->Random.RandomRanged(pThis->Param3, pThis->Param4);
-		if (!pThis->Param5)
-			TagClass::NotifyLocalChanged(pThis->Value);
-		else
-			TagClass::NotifyGlobalChanged(pThis->Value);
+		NotifyVariableChanged(pThis->Param5, pThis->Value);
 	}
 
 	return true;
@@ -217,9 +257,11 @@ bool TActionExt::GenerateRandomNumber(TActionClass* pThis, HouseClass* pHouse, O
 
 bool TActionExt::PrintVariableValue(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto& variables = ScenarioExt::Global()->Variables[pThis->Param3 != 0];
-	auto itr = variables.find(pThis->Value);
-	if (itr != variables.end())
+	auto pVariables = GetVariableMap(pThis->Param3, pThis->Param4);
+	if (!pVariables)
+		return false;
+	auto itr = pVariables->find(pThis->Value);
+	if (itr != pVariables->end())
 	{
 		CRT::swprintf(Phobos::wideBuffer, L"%d", itr->second.Value);
 		MessageListClass::Instance->PrintMessage(Phobos::wideBuffer);
@@ -230,12 +272,16 @@ bool TActionExt::PrintVariableValue(TActionClass* pThis, HouseClass* pHouse, Obj
 
 bool TActionExt::BinaryOperation(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto& variables1 = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
-	auto itr1 = variables1.find(pThis->Value);
-	auto& variables2 = ScenarioExt::Global()->Variables[pThis->Param6 != 0];
-	auto itr2 = variables2.find(pThis->Param4);
+	auto pVariables1 = GetVariableMap(pThis->Param5, pHouse);
+	if (!pVariables1)
+		return false;
+	auto pVariables2 = GetVariableMap(pThis->Param6, -1);
+	if (!pVariables2)
+		return false;
+	auto itr1 = pVariables1->find(pThis->Value);
+	auto itr2 = pVariables2->find(pThis->Param4);
 
-	if (itr1 != variables1.end() && itr2 != variables2.end())
+	if (itr1 != pVariables1->end() && itr2 != pVariables2->end())
 	{
 		auto& nCurrentValue = itr1->second.Value;
 		auto& nOptValue = itr2->second.Value;
@@ -257,10 +303,7 @@ bool TActionExt::BinaryOperation(TActionClass* pThis, HouseClass* pHouse, Object
 			return true;
 		}
 
-		if (!pThis->Param5)
-			TagClass::NotifyLocalChanged(pThis->Value);
-		else
-			TagClass::NotifyGlobalChanged(pThis->Value);
+		NotifyVariableChanged(pThis->Param5, pThis->Value);
 	}
 	return true;
 }
