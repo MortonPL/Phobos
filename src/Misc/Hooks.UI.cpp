@@ -220,3 +220,141 @@ DEFINE_HOOK(0x456776, BuildingClass_DrawRadialIndicator_Visibility, 0x6)
 
 	return DoNotDraw;
 }
+
+namespace CustomTab
+{
+	int GetCameoTab(AbstractType rtti, int idx);
+}
+
+int CustomTab::GetCameoTab(AbstractType rtti, int idx)
+{
+	if (rtti == AbstractType::Special || rtti == AbstractType::Super || rtti == AbstractType::SuperWeaponType)
+	{
+		SuperWeaponTypeClass* pSWType = SuperWeaponTypeClass::Array->GetItem(idx);
+		if (!pSWType)
+			return -1;
+		auto pSWExt = SWTypeExt::ExtMap.Find(pSWType);
+		if (!pSWExt)
+			return -1;
+		if (pSWExt->CameoTab < 1 || pSWExt->CameoTab >= 5)
+			return 0;
+		return pSWExt->CameoTab;
+	}
+	else
+	{
+		TechnoTypeClass* pType = TechnoTypeClass::GetByTypeAndIndex(rtti, idx);
+		if (!pType)
+			return -1;
+		auto pExt = TechnoTypeExt::ExtMap.Find(pType);
+		if (!pExt)
+			return -1;
+		if (pExt->CameoTab < 1 || pExt->CameoTab >= 5)
+			return 0;
+		return pExt->CameoTab;
+	}
+}
+
+DEFINE_HOOK(0x6A5F6E, SidebarClass_HandleStrips_CustomTab, 0x8)
+{
+	GET(AbstractType, rtti, ESI);
+	GET(int, idx, EAX);
+
+	int result = CustomTab::GetCameoTab(rtti, idx);
+	if (result <= 0)
+		return 0;
+
+	R->EAX(result - 1);
+	return 0x6A5FD3;
+}
+
+DEFINE_HOOK(0x6A614B, SidebarClass_FactoryLink_CustomTab, 0x5)
+{
+	GET(AbstractType, rtti, EBP);
+	GET(int, idx, EDI);
+
+	int result = CustomTab::GetCameoTab(rtti, idx);
+	if (result <= 0)
+		return 0;
+
+	R->ESI(R->ECX());
+	R->EAX(result - 1);
+	return 0x6A61B1;
+}
+
+DEFINE_HOOK(0x6A6335, SidebarClass_Add_CustomTab, 0x8)
+{
+	const int stackOffset = 0x14;
+	GET_STACK(AbstractType, rtti, STACK_OFFSET(stackOffset, 0x4));
+	GET_STACK(int, idx, STACK_OFFSET(stackOffset, 0x8));
+
+	int result = CustomTab::GetCameoTab(rtti, idx);
+	if (result <= 0)
+		return 0;
+
+	R->ESI(rtti);
+	R->EBP(idx);
+	R->Stack<int>(STACK_OFFSET(stackOffset, 0x4), result - 1);
+	return 0x6A63B7;
+}
+
+DEFINE_HOOK(0x6ABAD1, SidebarClass_RTTIToTab_CustomTab, 0x6)
+{
+	const int stackOffset = 0x4;
+	GET_STACK(AbstractType, rtti, STACK_OFFSET(stackOffset, 0x4));
+	GET_STACK(int, idx, STACK_OFFSET(stackOffset, 0x8));
+
+	int result = CustomTab::GetCameoTab(rtti, idx);
+	if (result <= 0)
+		return 0;
+
+	R->ESI(R->ECX());
+	R->EAX(result - 1);
+	return 0x6ABB3B;
+}
+
+DEFINE_HOOK(0x6ABC60, WhichTab_CustomTab, 0x5)
+{
+	GET(AbstractType, rtti, ECX);
+	GET(int, idx, EDX);
+	int result = CustomTab::GetCameoTab(rtti, idx);
+
+	if (result == -1)
+	{
+		R->EAX(result);
+		return 0x6ABC9A;
+	}
+
+	if (result == 0)
+	{
+		switch (rtti)
+		{
+		case AbstractType::Infantry:
+		case AbstractType::InfantryType:
+			result = 2;
+			break;
+		case AbstractType::Unit:
+		case AbstractType::UnitType:
+		case AbstractType::Aircraft:
+		case AbstractType::AircraftType:
+			result = 3;
+			break;
+		case AbstractType::Building:
+		case AbstractType::BuildingType:
+			result = ObjectTypeClass::IsBuildCat5(rtti, idx);
+			break;
+		case AbstractType::Super:
+		case AbstractType::Special:
+		case AbstractType::SuperWeaponType:
+			result = 1;
+			break;
+		default:
+			result = -1;
+			break;
+		}
+		R->EAX(result);
+		return 0x6ABC9A;
+	}
+
+	R->EAX(result - 1);
+	return 0x6ABC9A;
+}

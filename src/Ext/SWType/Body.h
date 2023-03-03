@@ -33,6 +33,7 @@ public:
 
 		Valueable<CSFText> UIDescription;
 		Valueable<int> CameoPriority;
+		Valueable<int> CameoTab;
 		ValueableVector<BuildingTypeClass*> LimboDelivery_Types;
 		ValueableVector<int> LimboDelivery_IDs;
 		ValueableVector<float> LimboDelivery_RollChances;
@@ -69,6 +70,7 @@ public:
 			, SW_NegBuildings {}
 			, UIDescription {}
 			, CameoPriority { 0 }
+			, CameoTab { 0 }
 			, LimboDelivery_Types {}
 			, LimboDelivery_IDs {}
 			, LimboDelivery_RollChances {}

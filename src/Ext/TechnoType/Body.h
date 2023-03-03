@@ -45,6 +45,7 @@ public:
 		Valueable<bool> ImmuneToCrit;
 		Valueable<bool> MultiMindControl_ReleaseVictim;
 		Valueable<int> CameoPriority;
+		Valueable<int> CameoTab;
 		Valueable<bool> NoManualMove;
 		Nullable<int> InitialStrength;
 		Valueable<bool> PassengerDeletion_Soylent;
@@ -194,6 +195,7 @@ public:
 			, ImmuneToCrit { false }
 			, MultiMindControl_ReleaseVictim { false }
 			, CameoPriority { 0 }
+			, CameoTab { 0 }
 			, NoManualMove { false }
 			, InitialStrength {}
 			, ShieldType {}

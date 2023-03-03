@@ -25,6 +25,7 @@ void SWTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->SW_NegBuildings)
 		.Process(this->UIDescription)
 		.Process(this->CameoPriority)
+		.Process(this->CameoTab)
 		.Process(this->LimboDelivery_Types)
 		.Process(this->LimboDelivery_IDs)
 		.Process(this->LimboDelivery_RandomWeightsData)
@@ -73,6 +74,7 @@ void SWTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 	this->UIDescription.Read(exINI, pSection, "UIDescription");
 	this->CameoPriority.Read(exINI, pSection, "CameoPriority");
+	this->CameoTab.Read(exINI, pSection, "CameoTab");
 	this->LimboDelivery_Types.Read(exINI, pSection, "LimboDelivery.Types");
 	this->LimboDelivery_IDs.Read(exINI, pSection, "LimboDelivery.IDs");
 	this->LimboDelivery_RollChances.Read(exINI, pSection, "LimboDelivery.RollChances");
