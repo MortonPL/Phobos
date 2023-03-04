@@ -44,11 +44,10 @@ int BuildingTypeExt::ExtData::GetSuperWeaponIndex(const int index) const
 
 int BuildingTypeExt::GetEnhancedPower(BuildingClass* pBuilding, HouseClass* pHouse)
 {
-	int nAmount = 0;
-	float fFactor = 1.0f;
-
 	auto const pHouseExt = HouseExt::ExtMap.Find(pHouse);
 
+	int nAmount = 0;
+	float fFactor = 1.0f;
 	for (const auto& [pExt, nCount] : pHouseExt->BuildingCounter)
 	{
 		if (pExt->PowerPlantEnhancer_Buildings.Contains(pBuilding->Type))
@@ -57,8 +56,26 @@ int BuildingTypeExt::GetEnhancedPower(BuildingClass* pBuilding, HouseClass* pHou
 			nAmount += pExt->PowerPlantEnhancer_Amount.Get(0) * nCount;
 		}
 	}
-
 	return static_cast<int>(std::round(pBuilding->GetPowerOutput() * fFactor)) + nAmount;
+}
+
+int BuildingTypeExt::GetEnhancedDrain(BuildingClass* pBuilding, HouseClass* pHouse)
+{
+	auto const pHouseExt = HouseExt::ExtMap.Find(pHouse);
+
+	int nAmount = 0;
+	float fFactor = 1.0f;
+	auto pTypeExt = BuildingTypeExt::ExtMap.Find(pBuilding->Type);
+	for (const auto& [pExt, nCount] : pHouseExt->BuildingCounter)
+	{
+		if (pExt->PowerPlantDrainEnhancer_Buildings.Contains(pBuilding->Type))
+		{
+			fFactor *= std::powf(pExt->PowerPlantDrainEnhancer_Factor.Get(1.0f), static_cast<float>(nCount));
+			nAmount += pExt->PowerPlantDrainEnhancer_Amount.Get(0) * nCount;
+		}
+	}
+	int drain = pBuilding->GetPowerDrain() + pTypeExt->PowerDrain;
+	return static_cast<int>(std::round(drain * pBuilding->GetHealthPercentage() * fFactor)) + nAmount;
 }
 
 int BuildingTypeExt::GetUpgradesAmount(BuildingTypeClass* pBuilding, HouseClass* pHouse) // not including producing upgrades
@@ -123,7 +140,11 @@ void BuildingTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->PowerPlantEnhancer_Buildings.Read(exINI, pSection, "PowerPlantEnhancer.PowerPlants");
 	this->PowerPlantEnhancer_Amount.Read(exINI, pSection, "PowerPlantEnhancer.Amount");
 	this->PowerPlantEnhancer_Factor.Read(exINI, pSection, "PowerPlantEnhancer.Factor");
+	this->PowerPlantDrainEnhancer_Buildings.Read(exINI, pSection, "PowerPlantDrainEnhancer.PowerPlants");
+	this->PowerPlantDrainEnhancer_Amount.Read(exINI, pSection, "PowerPlantDrainEnhancer.Amount");
+	this->PowerPlantDrainEnhancer_Factor.Read(exINI, pSection, "PowerPlantDrainEnhancer.Factor");
 	this->Powered_KillSpawns.Read(exINI, pSection, "Powered.KillSpawns");
+	this->PowerDrain.Read(exINI, pSection, "PowerDrain");
 
 	if (pThis->PowersUpBuilding[0] == NULL && this->PowersUp_Buildings.size() > 0)
 		strcpy_s(pThis->PowersUpBuilding, this->PowersUp_Buildings[0]->ID);
@@ -200,6 +221,10 @@ void BuildingTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->PowerPlantEnhancer_Buildings)
 		.Process(this->PowerPlantEnhancer_Amount)
 		.Process(this->PowerPlantEnhancer_Factor)
+		.Process(this->PowerPlantDrainEnhancer_Buildings)
+		.Process(this->PowerPlantDrainEnhancer_Amount)
+		.Process(this->PowerPlantDrainEnhancer_Factor)
+		.Process(this->PowerDrain)
 		.Process(this->SuperWeapons)
 		.Process(this->OccupierMuzzleFlashes)
 		.Process(this->Powered_KillSpawns)

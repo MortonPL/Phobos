@@ -46,8 +46,11 @@ DEFINE_HOOK(0x508CF2, HouseClass_UpdatePower_PowerOutput, 0x7)
 	GET(BuildingClass*, pBld, EDI);
 
 	pThis->PowerOutput += BuildingTypeExt::GetEnhancedPower(pBld, pThis);
+	// PAXX#1 Separate Power Drain
+	pThis->PowerDrain += BuildingTypeExt::GetEnhancedDrain(pBld, pThis);
+	R->ECX(R->EDI());
 
-	return 0x508D07;
+	return 0x508D1E;
 }
 
 DEFINE_HOOK(0x73E474, UnitClass_Unload_Storage, 0x6)

@@ -301,6 +301,7 @@ New:
 - `AAOnly` for projectiles (by Starkku)
 - `CreateUnit` improvements & additions (units spawning in air, spawn animation) (by Starkku)
 - Option to center pause menu background (by Starkku)
+- Separate power drain and power drain enhancement buildings (by Morton)
 
 Vanilla fixes:
 - Allow AI to repair structures built from base nodes/trigger action 125/SW delivery in single player missions (by Trsdy)
