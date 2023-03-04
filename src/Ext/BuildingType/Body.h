@@ -22,6 +22,10 @@ public:
 		ValueableVector<BuildingTypeClass*> PowerPlantEnhancer_Buildings;
 		Nullable<int> PowerPlantEnhancer_Amount;
 		Nullable<float> PowerPlantEnhancer_Factor;
+		ValueableVector<BuildingTypeClass*> PowerPlantDrainEnhancer_Buildings;
+		Nullable<int> PowerPlantDrainEnhancer_Amount;
+		Nullable<float> PowerPlantDrainEnhancer_Factor;
+		Valueable<int> PowerDrain;
 
 		DynamicVectorClass<Point2D> OccupierMuzzleFlashes;
 		Valueable<bool> Powered_KillSpawns;
@@ -59,6 +63,10 @@ public:
 			, PowerPlantEnhancer_Buildings {}
 			, PowerPlantEnhancer_Amount {}
 			, PowerPlantEnhancer_Factor {}
+			, PowerPlantDrainEnhancer_Buildings {}
+			, PowerPlantDrainEnhancer_Amount {}
+			, PowerPlantDrainEnhancer_Factor {}
+			, PowerDrain { 0 }
 			, OccupierMuzzleFlashes()
 			, Powered_KillSpawns { false }
 			, AllowAirstrike {}
@@ -123,6 +131,7 @@ public:
 	static bool SaveGlobals(PhobosStreamWriter& Stm);
 
 	static int GetEnhancedPower(BuildingClass* pBuilding, HouseClass* pHouse);
+	static int GetEnhancedDrain(BuildingClass* pBuilding, HouseClass* pHouse);
 	static bool CanUpgrade(BuildingClass* pBuilding, BuildingTypeClass* pUpgradeType, HouseClass* pUpgradeOwner);
 	static int GetUpgradesAmount(BuildingTypeClass* pBuilding, HouseClass* pHouse);
 };
