@@ -201,6 +201,9 @@ void BuildingTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 		this->PlacementPreview_Palette.LoadFromINI(pINI, pSection, "PlacementPreview.Palette");
 		this->PlacementPreview_Translucency.Read(exINI, pSection, "PlacementPreview.Translucency");
 	}
+
+	this->ReverseRubble.Read(exINI, pSection, "ReverseRubble");
+	this->ReverseRubble_Anim.Read(exINI, pSection, "ReverseRubble.Anim");
 }
 
 void BuildingTypeExt::ExtData::CompleteInitialization()
@@ -248,6 +251,8 @@ void BuildingTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->SpyEffect_Custom)
 		.Process(this->SpyEffect_VictimSuperWeapon)
 		.Process(this->SpyEffect_InfiltratorSuperWeapon)
+		.Process(this->ReverseRubble)
+		.Process(this->ReverseRubble_Anim)
 		;
 }
 

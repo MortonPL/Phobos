@@ -57,6 +57,9 @@ public:
 		NullableIdx<SuperWeaponTypeClass> SpyEffect_VictimSuperWeapon;
 		NullableIdx<SuperWeaponTypeClass> SpyEffect_InfiltratorSuperWeapon;
 
+		Nullable<BuildingTypeClass*> ReverseRubble;
+		Nullable<AnimTypeClass*> ReverseRubble_Anim;
+
 		ExtData(BuildingTypeClass* OwnerObject) : Extension<BuildingTypeClass>(OwnerObject)
 			, PowersUp_Owner { AffectedHouse::Owner }
 			, PowersUp_Buildings {}
@@ -92,6 +95,8 @@ public:
 			, SpyEffect_Custom { false }
 			, SpyEffect_VictimSuperWeapon {}
 			, SpyEffect_InfiltratorSuperWeapon {}
+			, ReverseRubble {}
+			, ReverseRubble_Anim {}
 		{ }
 
 		// Ares 0.A functions

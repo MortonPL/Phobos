@@ -312,6 +312,23 @@ PowerPlantDrainEnhancer.Amount=0        ; integer
 PowerPlantDrainEnhancer.Factor=1.0      ; floating point value
 ```
 
+### Reverse rubble
+
+- Buildings can now be converted into other buildings once their health reaches 100%.
+  - `ReverseRubble` specifies into what building type it will convert.
+  - If `ReverseRubble.Anim` is set, an animation will be played during the conversion.
+
+```{warning}
+This feature will only trigger for negative damage weapons/warheads. It will NOT trigger for base repairs or engineer repairs!
+```
+
+In `rulesmd.ini`:
+```ini
+[SOMEBUILDING]          ; BuildingType
+ReverseRubble=          ; BuildingType
+ReverseRubble.Anim=     ; AnimationType  
+```
+
 ### Spy Effects
 
 - Additional espionage bonuses can be toggled with `SpyEffect.Custom`.

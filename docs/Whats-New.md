@@ -288,6 +288,7 @@ New:
 - `AnimList` on zero damage Warheads toggle via `AnimList.ShowOnZeroDamage` (by Starkku)
 - Including INI files and inheriting INI sections (by Morton)
 - Separate power drain and power drain enhancement buildings (by Morton)
+- Reverse rubble (by Morton)
 
 Vanilla fixes:
 - Allow AI to repair structures built from base nodes/trigger action 125/SW delivery in single player missions (by Trsdy)
