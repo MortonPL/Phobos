@@ -357,3 +357,37 @@ DEFINE_HOOK(0x4575A2, BuildingClass_Infiltrate_AfterAres, 0xE)
 	BuildingExt::HandleInfiltrate(pBuilding, pInfiltratorHouse);
 	return 0;
 }
+
+void ApplyReverseRubble(BuildingClass* pTarget)
+{
+	if (pTarget->Health != pTarget->Type->Strength)
+		return;
+
+	auto pExt = BuildingTypeExt::ExtMap.Find(pTarget->Type);
+	if (!pExt->ReverseRubble.isset())
+		return;
+
+	pTarget->Limbo();
+	pTarget->DestroyNthAnim(BuildingAnimSlot::All);
+	auto pNewBuilding = static_cast<BuildingClass*>(pExt->ReverseRubble.Get()->CreateObject(pTarget->Owner));
+	if (!pNewBuilding->Unlimbo(pTarget->Location, pTarget->PrimaryFacing.Current().GetDir()))
+	{
+		GameDelete(pNewBuilding);
+		return;
+	}
+
+	if (pExt->ReverseRubble_Anim.isset())
+		GameCreate<AnimClass>(pExt->ReverseRubble_Anim.Get(), pNewBuilding->GetCoords());
+}
+
+DEFINE_HOOK(0x442C06, BuildingClass_TakeDamage, 0x5)
+{
+	GET(BuildingClass*, pBuilding, ESI);
+	ApplyReverseRubble(pBuilding);
+	return 0;
+}
+
+DEFINE_HOOK(0x442238, abfskasbfkafsj, 0x7)
+{
+	return 0;
+}

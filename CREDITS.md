@@ -196,6 +196,7 @@ This page lists all the individual contributions to the project by their author.
   - Default campaign game speed override and custom campaign game speed FPS
   - Including INI files and inheriting INI sections
   - Separate power drain and power drain enhancement buildings
+  - Reverse rubble
   - Help with docs
 - **ChrisLv_CN** (work relicensed under [following permission](https://github.com/Phobos-developers/Phobos/blob/develop/images/ChrisLv-relicense.png)):
    - General assistance
