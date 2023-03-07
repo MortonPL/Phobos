@@ -212,6 +212,10 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->DeployFireWeapon.Read(exINI, pSection, "DeployFireWeapon");
 	this->TargetZoneScanType.Read(exINI, pSection, "TargetZoneScanType");
 
+	this->UnitPower.Read(exINI, pSection, "UnitPower");
+	this->UnitPowerDrain.Read(exINI, pSection, "UnitPowerDrain");
+	this->UnitRequiresPower.Read(exINI, pSection, "UnitRequiresPower");
+	
 	// Ares 0.2
 	this->RadarJamRadius.Read(exINI, pSection, "RadarJamRadius");
 
@@ -432,6 +436,9 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->Explodes_KillPassengers)
 		.Process(this->DeployFireWeapon)
 		.Process(this->TargetZoneScanType)
+		.Process(this->UnitPower)
+		.Process(this->UnitPowerDrain)
+		.Process(this->UnitRequiresPower)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)

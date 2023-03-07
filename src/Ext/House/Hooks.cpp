@@ -105,3 +105,60 @@ DEFINE_HOOK(0x4FD1CD, HouseClass_RecalcCenter_LimboDelivery, 0x6)
 
 	return 0;
 }
+
+DEFINE_HOOK(0x508D45, HouseClass_UpdatePower_PoweredUnits, 0x5)
+{
+	GET(HouseClass*, pHouse, ESI);
+
+	for (auto [pType, pExt]: TechnoTypeExt::ExtMap)
+	{
+		int num = pHouse->CountOwnedAndPresent(pType);
+		if (pExt->UnitPower > 0)
+			pHouse->PowerOutput += pExt->UnitPower * num;
+		else
+			pHouse->PowerDrain += pExt->UnitPower * num;
+		pHouse->PowerDrain += pExt->UnitPowerDrain * num;
+	}
+
+	return 0;
+}
+
+DEFINE_HOOK_AGAIN(0x5025F0, HouseClass_RegisterGain_PoweredUnits, 0x5) // RegisterLoss, actually
+DEFINE_HOOK(0x502A80, HouseClass_RegisterGain_PoweredUnits, 0x8)
+{
+	GET(HouseClass*, pHouse, ECX);
+	pHouse->RecheckPower = true;
+	pHouse->RecheckTechTree = true;
+	SidebarClass::Instance->SidebarBackgroundNeedsRedraw = true;
+	return 0;
+}
+
+DEFINE_HOOK(0x4F8361, HouseClass_CanBuild_PopCap, 0x3)
+{
+	GET(HouseClass*, pHouse, ECX);
+	GET_STACK(TechnoTypeClass*, pType, STACK_OFFSET(0x0, 0x4));
+	auto pExt = TechnoTypeExt::ExtMap.Find(pType);
+	if (!pExt || !pExt->UnitRequiresPower)
+		return 0;
+
+	if (pHouse->PowerDrain + pExt->UnitPowerDrain <= pHouse->PowerOutput)
+		return 0;
+
+	// cameo greyed out
+	R->EAX(-1);
+
+	return 0;
+}
+
+/*
+DEFINE_HOOK(0x4FA520, HouseCLass_BeginProduction_PopCap, 0x5)
+{
+	if (pHouse->PowerDrain + pExt->UnitPowerDrain <= pHouse->PowerOutput)
+		return 0;
+
+	// PROD LIMIT
+	R->EAX(1);
+
+	return 0;
+}
+*/

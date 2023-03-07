@@ -158,6 +158,10 @@ public:
 		std::vector<std::vector<CoordStruct>> DeployedWeaponBurstFLHs;
 		std::vector<std::vector<CoordStruct>> EliteDeployedWeaponBurstFLHs;
 
+		Valueable<int> UnitPower;
+		Valueable<int> UnitPowerDrain;
+		Valueable<bool> UnitRequiresPower;
+
 		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
 			, HealthBar_Hide { false }
 			, UIDescription {}
@@ -262,6 +266,9 @@ public:
 			, Explodes_KillPassengers { true }
 			, DeployFireWeapon {}
 			, TargetZoneScanType { TargetZoneScanType::Same }
+			, UnitPower { 0 }
+			, UnitPowerDrain { 0 }
+			, UnitRequiresPower { false }
 		{ }
 
 		virtual ~ExtData() = default;
