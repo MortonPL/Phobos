@@ -976,6 +976,22 @@ if(_strcmpi(parser.value(), #name) == 0){ value = LocomotionClass::CLSIDs::name;
 		return true;
 	}
 
+	template <>
+	inline bool read<ResourcePair>(ResourcePair& value, INI_EX& parser, const char* pSection, const char* pKey, bool allocate)
+	{
+		if (parser.ReadString(pSection, pKey))
+		{
+			auto str = parser.value();
+			value = 
+			return true;
+		}
+		else if (!parser.empty())
+		{
+			Debug::INIParseFailed(pSection, pKey, parser.value(), "Expected a valid number");
+		}
+		return false;
+	}
+
 	template <typename T>
 	void parse_values(std::vector<T>& vector, INI_EX& parser, const char* pSection, const char* pKey)
 	{

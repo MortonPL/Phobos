@@ -52,6 +52,8 @@ public:
 		Nullable<int> Detonate_Damage;
 		Valueable<bool> Detonate_AtFirer;
 
+		ValueableVector<ResourcePair> Resources_Cost;
+
 		std::vector<ValueableVector<int>> LimboDelivery_RandomWeightsData;
 		std::vector<ValueableVector<int>> SW_Next_RandomWeightsData;
 
