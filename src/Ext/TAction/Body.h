@@ -19,6 +19,10 @@ enum class PhobosTriggerAction : unsigned int
 	RunSuperWeaponAtLocation = 505,
 	RunSuperWeaponAtWaypoint = 506,
 	ToggleMCVRedeploy = 510,
+	EditResource = 511,
+	GenerateRandomResource = 512,
+	PrintResourceValue = 513,
+	BinaryResourceOperation = 514
 };
 
 class TActionExt
@@ -61,6 +65,10 @@ public:
 	ACTION_FUNC(RunSuperWeaponAtLocation);
 	ACTION_FUNC(RunSuperWeaponAtWaypoint);
 	ACTION_FUNC(ToggleMCVRedeploy);
+	ACTION_FUNC(EditResource);
+	ACTION_FUNC(GenerateRandomResource);
+	ACTION_FUNC(PrintResourceValue);
+	ACTION_FUNC(BinaryResourceOperation);
 
 	static bool RunSuperWeaponAt(TActionClass* pThis, int X, int Y);
 

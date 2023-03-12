@@ -8,6 +8,7 @@
 #include <Utilities/TemplateDef.h>
 
 #include <Ext/Building/Body.h>
+#include <New/Type/ResourceTypeClass.h>
 
 class SWTypeExt
 {
@@ -52,7 +53,8 @@ public:
 		Nullable<int> Detonate_Damage;
 		Valueable<bool> Detonate_AtFirer;
 
-		ValueableVector<ResourcePair> Resources_Cost;
+		ValueableIdxVector<ResourceTypeClass> Resource_Types;
+		ValueableVector<int> Resource_Costs;
 
 		std::vector<ValueableVector<int>> LimboDelivery_RandomWeightsData;
 		std::vector<ValueableVector<int>> SW_Next_RandomWeightsData;
@@ -89,6 +91,8 @@ public:
 			, SW_Next_RollChances {}
 			, SW_Next_RandomWeightsData {}
 			, ShowTimer_Priority { 0 }
+			, Resource_Types {}
+			, Resource_Costs {}
 		{ }
 
 		// Ares 0.A functions

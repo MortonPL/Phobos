@@ -61,9 +61,10 @@ void ResourceInfoCommandClass::Execute(WWKey eInput) const
 		append("Money = %d, ", pHouse->Balance);
 		append("Power = %d/%d, ", pHouse->PowerOutput, pHouse->PowerDrain);
 		append("Score = %d\n", pHouse->SiloMoney);
-		for (auto pair: pExt->Variables)
+		for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
 		{
-			append("%s = %d", pair.second.Name, pair.second.Value);
+			auto resourceName = ResourceTypeClass::Array[pExt->Resource_Types[i]].get()->UIName;
+			append("%S = %d", resourceName.Get().Text, pExt->Resource_Values[i]);
 		}
 		append("\n");
 		display();

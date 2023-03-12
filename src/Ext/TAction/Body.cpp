@@ -72,6 +72,15 @@ bool TActionExt::Execute(TActionClass* pThis, HouseClass* pHouse, ObjectClass* p
 	case PhobosTriggerAction::ToggleMCVRedeploy:
 		return TActionExt::ToggleMCVRedeploy(pThis, pHouse, pObject, pTrigger, location);
 
+	case PhobosTriggerAction::EditResource:
+		return TActionExt::EditResource(pThis, pHouse, pObject, pTrigger, location);
+	case PhobosTriggerAction::GenerateRandomResource:
+		return TActionExt::GenerateRandomResource(pThis, pHouse, pObject, pTrigger, location);
+	case PhobosTriggerAction::PrintResourceValue:
+		return TActionExt::PrintResourceValue(pThis, pHouse, pObject, pTrigger, location);
+	case PhobosTriggerAction::BinaryResourceOperation:
+		return TActionExt::BinaryResourceOperation(pThis, pHouse, pObject, pTrigger, location);
+
 	default:
 		bHandled = false;
 		return true;
@@ -139,45 +148,6 @@ bool TActionExt::SaveGame(TActionClass* pThis, HouseClass* pHouse, ObjectClass* 
 	return true;
 }
 
-std::map<int, ExtendedVariable>* GetVariableMap(int type, int houseIndex = -1)
-{
-	if (type == 2)
-	{
-		auto pHouse = HouseClass::Array->GetItem(houseIndex);
-		if (!pHouse)
-			return nullptr;
-		return &HouseExt::ExtMap.Find(pHouse)->Variables;
-	}
-	else
-	{
-		return &ScenarioExt::Global()->Variables[type != 0];
-	}
-}
-
-std::map<int, ExtendedVariable>* GetVariableMap(int type, HouseClass* pHouse)
-{
-	if (type == 2)
-	{
-		if (!pHouse)
-			return nullptr;
-		return &HouseExt::ExtMap.Find(pHouse)->Variables;
-	}
-	else
-	{
-		return &ScenarioExt::Global()->Variables[type != 0];
-	}
-}
-
-void NotifyVariableChanged(int type, int value)
-{
-	if (type == 0)
-		TagClass::NotifyLocalChanged(value);
-	else if (type == 1)
-		TagClass::NotifyGlobalChanged(value);
-	else
-		;  // TODO how do we handle tags?
-}
-
 bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
 	// Variable Index
@@ -202,20 +172,12 @@ bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectCla
 	// The second value
 	// holds by pThis->Param4
 
-	// Global Variable or Local or House
-	// 0 for local, 1 for global, 2 for house
+	// Global Variable or Local
+	// 0 for local, 1 for global
 	// holds by pThis->Param5
 
-	// House index for house variables
-	// holds by pThis->Param6
-
-	auto pVariables = GetVariableMap(pThis->Param5, pThis->Param6);
-	if (!pVariables)
-		return false;
-	auto itr = pVariables->find(pThis->Value);
-	if (itr != pVariables->end())
+	auto modifyVariable = [pThis](int& nCurrentValue)
 	{
-		auto& nCurrentValue = itr->second.Value;
 		// variable being found
 		switch (pThis->Param3)
 		{
@@ -232,59 +194,67 @@ bool TActionExt::EditVariable(TActionClass* pThis, HouseClass* pHouse, ObjectCla
 		case 10: { nCurrentValue |= pThis->Param4; break; }
 		case 11: { nCurrentValue &= pThis->Param4; break; }
 		default:
-			return true;
+			break;
 		}
 
-		NotifyVariableChanged(pThis->Param5, pThis->Value);
-	}
+		if (!pThis->Param5)
+			TagClass::NotifyLocalChanged(pThis->Value);
+		else
+			TagClass::NotifyGlobalChanged(pThis->Value);
+	};
+
+	// uses !pThis->Param5 to ensure Param5 is 0 or 1
+	auto& variables = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
+	auto itr = variables.find(pThis->Value);
+	if (itr != variables.end())
+		modifyVariable(itr->second.Value);
+
 	return true;
 }
 
 bool TActionExt::GenerateRandomNumber(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto pVariables = GetVariableMap(pThis->Param5, pThis->Param6);
-	if (!pVariables)
-		return false;
-	auto itr = pVariables->find(pThis->Value);
-	if (itr != pVariables->end())
+	auto randomizeVariable = [pThis](int& nCurrentValue)
 	{
-		itr->second.Value = ScenarioClass::Instance->Random.RandomRanged(pThis->Param3, pThis->Param4);
-		NotifyVariableChanged(pThis->Param5, pThis->Value);
-	}
+		nCurrentValue = ScenarioClass::Instance->Random.RandomRanged(pThis->Param3, pThis->Param4);
+		if (!pThis->Param5)
+			TagClass::NotifyLocalChanged(pThis->Value);
+		else
+			TagClass::NotifyGlobalChanged(pThis->Value);
+	};
+
+	auto& variables = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
+	auto itr = variables.find(pThis->Value);
+	if (itr != variables.end())
+		randomizeVariable(itr->second.Value);
 
 	return true;
 }
 
 bool TActionExt::PrintVariableValue(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto pVariables = GetVariableMap(pThis->Param3, pThis->Param4);
-	if (!pVariables)
-		return false;
-	auto itr = pVariables->find(pThis->Value);
-	if (itr != pVariables->end())
+	auto randomizeVariable = [pThis](int& nCurrentValue)
 	{
-		CRT::swprintf(Phobos::wideBuffer, L"%d", itr->second.Value);
+		CRT::swprintf(Phobos::wideBuffer, L"%d", nCurrentValue);
 		MessageListClass::Instance->PrintMessage(Phobos::wideBuffer);
-	}
+		if (!pThis->Param3)
+			TagClass::NotifyLocalChanged(pThis->Value);
+		else
+			TagClass::NotifyGlobalChanged(pThis->Value);
+	};
+
+	auto& variables = ScenarioExt::Global()->Variables[pThis->Param3 != 0];
+	auto itr = variables.find(pThis->Value);
+	if (itr != variables.end())
+		randomizeVariable(itr->second.Value);
 
 	return true;
 }
 
 bool TActionExt::BinaryOperation(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
 {
-	auto pVariables1 = GetVariableMap(pThis->Param5, pHouse);
-	if (!pVariables1)
-		return false;
-	auto pVariables2 = GetVariableMap(pThis->Param6, -1);
-	if (!pVariables2)
-		return false;
-	auto itr1 = pVariables1->find(pThis->Value);
-	auto itr2 = pVariables2->find(pThis->Param4);
-
-	if (itr1 != pVariables1->end() && itr2 != pVariables2->end())
+	auto modifyVariable = [pThis](int& nCurrentValue, int& nOptValue)
 	{
-		auto& nCurrentValue = itr1->second.Value;
-		auto& nOptValue = itr2->second.Value;
 		switch (pThis->Param3)
 		{
 		case 0: { nCurrentValue = nOptValue; break; }
@@ -300,11 +270,22 @@ bool TActionExt::BinaryOperation(TActionClass* pThis, HouseClass* pHouse, Object
 		case 10: { nCurrentValue |= nOptValue; break; }
 		case 11: { nCurrentValue &= nOptValue; break; }
 		default:
-			return true;
+			break;
 		}
 
-		NotifyVariableChanged(pThis->Param5, pThis->Value);
-	}
+		if (!pThis->Param5)
+			TagClass::NotifyLocalChanged(pThis->Value);
+		else
+			TagClass::NotifyGlobalChanged(pThis->Value);
+	};
+
+	auto& variables1 = ScenarioExt::Global()->Variables[pThis->Param5 != 0];
+	auto itr1 = variables1.find(pThis->Value);
+	auto& variables2 = ScenarioExt::Global()->Variables[pThis->Param6 != 0];
+	auto itr2 = variables2.find(pThis->Param4);
+	if (itr1 != variables1.end() && itr2 != variables2.end())
+		modifyVariable(itr1->second.Value, itr2->second.Value);
+
 	return true;
 }
 
@@ -484,6 +465,182 @@ bool TActionExt::ToggleMCVRedeploy(TActionClass* pThis, HouseClass* pHouse, Obje
 	return true;
 }
 
+void NotifyVariableChanged(int resourceIdx, int houseIdx)
+{
+	// TODO
+}
+
+bool TActionExt::EditResource(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
+{
+	// Value - resource index
+	// Param3 - House index
+	// Param4 - operator
+	// Param5 - value
+
+	auto modifyVariable = [pThis](int& nCurrentValue)
+	{
+		// variable being found
+		switch (pThis->Param4)
+		{
+		case 0: { nCurrentValue = pThis->Param5; break; }
+		case 1: { nCurrentValue += pThis->Param5; break; }
+		case 2: { nCurrentValue -= pThis->Param5; break; }
+		case 3: { nCurrentValue *= pThis->Param5; break; }
+		case 4: { nCurrentValue /= pThis->Param5; break; }
+		case 5: { nCurrentValue %= pThis->Param5; break; }
+		case 6: { nCurrentValue <<= pThis->Param5; break; }
+		case 7: { nCurrentValue >>= pThis->Param5; break; }
+		case 8: { nCurrentValue = ~nCurrentValue; break; }
+		case 9: { nCurrentValue ^= pThis->Param5; break; }
+		case 10: { nCurrentValue |= pThis->Param5; break; }
+		case 11: { nCurrentValue &= pThis->Param5; break; }
+		default:
+			break;
+		}
+
+		NotifyVariableChanged(pThis->Value, pThis->Param3);
+	};
+
+	auto pHouse1 = HouseClass::FindByIndex(pThis->Param3);
+	if (!pHouse1)
+		return false;
+
+	auto pExt = HouseExt::ExtMap.Find(pHouse1);
+	for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
+	{
+		if (pExt->Resource_Types[i] == pThis->Value)
+		{
+			modifyVariable(pExt->Resource_Values[i]);
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool TActionExt::GenerateRandomResource(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
+{
+	// Value - resource index
+	// Param3 - House index
+	// Param4 - min
+	// Param5 - max
+
+	auto randomizeVariable = [pThis](int& nCurrentValue)
+	{
+		nCurrentValue = ScenarioClass::Instance->Random.RandomRanged(pThis->Param4, pThis->Param5);
+		NotifyVariableChanged(pThis->Value, pThis->Param3);
+	};
+
+	auto pHouse1 = HouseClass::FindByIndex(pThis->Param3);
+	if (!pHouse1)
+		return false;
+
+	auto pExt = HouseExt::ExtMap.Find(pHouse1);
+	for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
+	{
+		if (pExt->Resource_Types[i] == pThis->Value)
+		{
+			randomizeVariable(pExt->Resource_Values[i]);
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool TActionExt::PrintResourceValue(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
+{
+	// Value - resource index
+	// Param3 - House index
+
+	auto randomizeVariable = [pThis](int& nCurrentValue)
+	{
+		CRT::swprintf(Phobos::wideBuffer, L"%d", nCurrentValue);
+		MessageListClass::Instance->PrintMessage(Phobos::wideBuffer);
+		NotifyVariableChanged(pThis->Value, pThis->Param3);
+	};
+
+	auto pHouse1 = HouseClass::FindByIndex(pThis->Param3);
+	if (!pHouse1)
+		return false;
+
+	auto pExt = HouseExt::ExtMap.Find(pHouse1);
+	for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
+	{
+		if (pExt->Resource_Types[i] == pThis->Value)
+		{
+			randomizeVariable(pExt->Resource_Values[i]);
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool TActionExt::BinaryResourceOperation(TActionClass* pThis, HouseClass* pHouse, ObjectClass* pObject, TriggerClass* pTrigger, CellStruct const& location)
+{
+	// Value - resource index
+	// Param3 - House index
+	// Param4 - 2nd resource index
+	// Param5 - 2nd House index
+	// Param6 - operator
+
+	auto modifyVariable = [pThis](int& nCurrentValue, int& nOptValue)
+	{
+		switch (pThis->Param6)
+		{
+		case 0: { nCurrentValue = nOptValue; break; }
+		case 1: { nCurrentValue += nOptValue; break; }
+		case 2: { nCurrentValue -= nOptValue; break; }
+		case 3: { nCurrentValue *= nOptValue; break; }
+		case 4: { nCurrentValue /= nOptValue; break; }
+		case 5: { nCurrentValue %= nOptValue; break; }
+		case 6: { nCurrentValue <<= nOptValue; break; }
+		case 7: { nCurrentValue >>= nOptValue; break; }
+		case 8: { nCurrentValue = nOptValue; break; }
+		case 9: { nCurrentValue ^= nOptValue; break; }
+		case 10: { nCurrentValue |= nOptValue; break; }
+		case 11: { nCurrentValue &= nOptValue; break; }
+		default:
+			break;
+		}
+
+		NotifyVariableChanged(pThis->Value, pThis->Param3);
+	};
+
+	auto pHouse1 = HouseClass::FindByIndex(pThis->Param3);
+	auto pHouse2 = HouseClass::FindByIndex(pThis->Param4);
+	if (!pHouse1 || !pHouse2)
+		return false;
+
+	auto pExt = HouseExt::ExtMap.Find(pHouse1);
+	auto pExt2 = HouseExt::ExtMap.Find(pHouse2);
+	int idx1 = -1;
+	int idx2 = -1;
+	for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
+	{
+		if (pExt->Resource_Types[i] == pThis->Value)
+		{
+			idx1 = i;
+			break;
+		}
+	}
+	for (size_t i = 0; i < pExt->Resource_Types.size(); i++)
+	{
+		if (pExt->Resource_Types[i] == pThis->Value)
+		{
+			idx2 = i;
+			break;
+		}
+	}
+
+	if (idx1 == -1 || idx2 == -1)
+		return false;
+
+	modifyVariable(pExt->Resource_Values[idx1], pExt2->Resource_Values[idx2]);
+
+	return true;
+}
 
 // =============================
 // container

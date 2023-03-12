@@ -7,6 +7,7 @@
 #include <Utilities/Container.h>
 #include <Utilities/TemplateDef.h>
 #include <Ext/Scenario/Body.h>
+#include <New/Type/ResourceTypeClass.h>
 
 class HouseTypeExt
 {
@@ -15,10 +16,12 @@ public:
 	class ExtData final : public Extension<HouseTypeClass>
 	{
 	public:
-		std::map<int, ExtendedVariable> Variables;
+		ValueableIdxVector<ResourceTypeClass> Resource_Types;
+		ValueableVector<int> Resource_Values;
 
 		ExtData(HouseTypeClass* OwnerObject) : Extension<HouseTypeClass>(OwnerObject),
-			Variables {}
+			Resource_Types {},
+			Resource_Values {}
 		{
 		}
 
@@ -34,8 +37,6 @@ public:
 	private:
 		template <typename T>
 		void Serialize(T& Stm);
-
-		void ReadVariables(CCINIClass* const pINI, const char* pSection);
 	};
 
 	class ExtContainer final : public Container<HouseTypeExt>

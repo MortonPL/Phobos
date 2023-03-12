@@ -12,35 +12,24 @@ void HouseTypeExt::ExtData::LoadFromINIFile(CCINIClass* pINI)
 
 	INI_EX exINI(pINI);
 
-	ReadVariables(pINI, pSection);
-}
-
-void HouseTypeExt::ExtData::ReadVariables(CCINIClass* const pINI, const char* pSection)
-{
-	char tempBuffer[13];
-
-	for (int i = 0; i < INT_MAX; i++)
-	{
-		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Variable%d", i);
-		PhobosFixedString<0x100> temp;
-		temp.Read(pINI, pSection, tempBuffer);
-		if (!temp)
-			break;
-		auto& var = this->Variables[i];
-		char* buffer;
-		strcpy_s(var.Name, strtok_s(Phobos::readBuffer, ",", &buffer));
-		if (auto pState = strtok_s(nullptr, ",", &buffer))
-			var.Value = atoi(pState);
-		else
-			var.Value = 0;
-	}
+	this->Resource_Types.Read(exINI, pSection, "Resource.Types");
+	this->Resource_Values.Read(exINI, pSection, "Resource.Values");
+	int typeSize = this->Resource_Types.size();
+	int valueSize = this->Resource_Values.size();
+	if (typeSize > valueSize)
+		for (int i = 0; i < typeSize - valueSize; i++)
+			this->Resource_Types.pop_back();
+	else if (typeSize < valueSize)
+		for (int i = 0; i < valueSize - typeSize; i++)
+			this->Resource_Values.pop_back();
 }
 
 template <typename T>
 void HouseTypeExt::ExtData::Serialize(T& Stm)
 {
 	Stm
-		.Process(this->Variables)
+		.Process(this->Resource_Types)
+		.Process(this->Resource_Values)
 		;
 }
 

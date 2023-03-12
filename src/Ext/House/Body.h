@@ -28,7 +28,9 @@ public:
 		BuildingClass* Factory_VehicleType;
 		BuildingClass* Factory_NavyType;
 		BuildingClass* Factory_AircraftType;
-		std::map<int, ExtendedVariable> Variables;
+
+		ValueableVector<int> Resource_Values;
+		ValueableIdxVector<ResourceTypeClass> Resource_Types;
 
 		//Read from INI
 		bool RepairBaseNodes[3];
@@ -43,15 +45,16 @@ public:
 			, Factory_NavyType { nullptr }
 			, Factory_AircraftType { nullptr }
 			, RepairBaseNodes { false,false,false }
-			, Variables {}
 		{
-			this->Variables = HouseTypeExt::ExtMap.Find(OwnerObject->Type)->Variables;
+			auto pExt = HouseTypeExt::ExtMap.Find(OwnerObject->Type);
+			this->Resource_Types = pExt->Resource_Types;
+			this->Resource_Values = pExt->Resource_Values;
 		}
 
 		bool OwnsLimboDeliveredBuilding(BuildingClass* pBuilding);
 		void UpdateAutoDeathObjectsInLimbo();
-		void SetVariableToByID(int nIndex, char bState);
-		void GetVariableStateByID(int nIndex, char* pOut);
+		void SetResourceAmount(int typeIdx, int value);
+		int& GetResourceAmount(int typeIdx, bool& success);
 
 		virtual ~ExtData() = default;
 

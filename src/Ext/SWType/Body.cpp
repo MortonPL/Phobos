@@ -43,6 +43,8 @@ void SWTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->SW_Next_RandomWeightsData)
 		.Process(this->SW_Next_RollChances)
 		.Process(this->ShowTimer_Priority)
+		.Process(this->Resource_Types)
+		.Process(this->Resource_Costs)
 		;
 }
 
@@ -135,6 +137,20 @@ void SWTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->Detonate_Weapon.Read(exINI, pSection, "Detonate.Weapon", true);
 	this->Detonate_Damage.Read(exINI, pSection, "Detonate.Damage");
 	this->Detonate_AtFirer.Read(exINI, pSection, "Detonate.AtFirer");
+
+	this->Resource_Types.Read(exINI, pSection, "Resource.Types");
+	this->Resource_Costs.Read(exINI, pSection, "Resource.Costs");
+	int typeSize = this->Resource_Types.size();
+	int costSize = this->Resource_Costs.size();
+	if (typeSize > 0 && costSize > 0)
+	{
+		if (typeSize > costSize)
+			for (int i = 0; i < typeSize - costSize; i++)
+				this->Resource_Types.pop_back();
+		else if (typeSize < costSize)
+			for (int i = 0; i < costSize - typeSize; i++)
+				this->Resource_Costs.pop_back();
+	}
 }
 
 void SWTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)

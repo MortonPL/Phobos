@@ -94,27 +94,34 @@ void HouseExt::ExtData::UpdateAutoDeathObjectsInLimbo()
 	}
 }
 
-void HouseExt::ExtData::SetVariableToByID(int nIndex, char bState)
+void HouseExt::ExtData::SetResourceAmount(int typeIdx, int value)
 {
-	auto& dict = this->Variables;
-
-	auto itr = dict.find(nIndex);
-
-	if (itr != dict.end() && itr->second.Value != bState)
+	for (size_t i = 0; i < this->Resource_Types.size(); i++)
 	{
-		itr->second.Value = bState;
-		ScenarioClass::Instance->VariablesChanged = true;
-		//TagClass::NotifyHouseVariableChanged(nIndex); // TODO how do we handle tags?
+		if (this->Resource_Types[i] == typeIdx)
+		{
+			this->Resource_Values[i] = value;
+			return;
+		}
 	}
+
+	this->Resource_Types.push_back(typeIdx);
+	this->Resource_Values.push_back(value);
 }
 
-void HouseExt::ExtData::GetVariableStateByID(int nIndex, char* pOut)
+int& HouseExt::ExtData::GetResourceAmount(int typeIdx, bool& success)
 {
-	auto& dict = this->Variables;
+	for (size_t i = 0; i < this->Resource_Types.size(); i++)
+	{
+		if (this->Resource_Types[i] == typeIdx)
+		{
+			success = true;
+			return this->Resource_Values[i];
+		}
+	}
 
-	auto itr = dict.find(nIndex);
-	if (itr != dict.end())
-		*pOut = static_cast<char>(itr->second.Value);
+	success = false;
+	return typeIdx;
 }
 
 void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
@@ -132,27 +139,25 @@ void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 			this->RepairBaseNodes[i] = readBaseNodeRepairInfo[i < nWritten ? i : nWritten - 1];
 	}
 
-	ReadVariables(pINI, pSection);
-}
+	ValueableVector<int> Temp_Resource_Values;
+	ValueableIdxVector<ResourceTypeClass> Temp_Resource_Types;
 
-void HouseExt::ExtData::ReadVariables(CCINIClass* const pINI, const char* pSection)
-{
-	char tempBuffer[13];
+	Temp_Resource_Types.Read(exINI, pSection, "Resource.Types");
+	Temp_Resource_Values.Read(exINI, pSection, "Resource.Values");
+	int typeSize = Temp_Resource_Types.size();
+	int valueSize = Temp_Resource_Values.size();
 
-	for (int i = 0; i < INT_MAX; i++)
+	if (typeSize > 0 && valueSize > 0)
 	{
-		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Variable%d", i);
-		PhobosFixedString<0x100> temp;
-		temp.Read(pINI, pSection, tempBuffer);
-		if (!temp)
-			break;
-		auto& var = this->Variables[i];
-		char* buffer;
-		strcpy_s(var.Name, strtok_s(Phobos::readBuffer, ",", &buffer));
-		if (auto pState = strtok_s(nullptr, ",", &buffer))
-			var.Value = atoi(pState);
-		else
-			var.Value = 0;
+		if (typeSize > valueSize)
+			for (int i = 0; i < typeSize - valueSize; i++)
+				Temp_Resource_Types.pop_back();
+		else if (typeSize < valueSize)
+			for (int i = 0; i < valueSize - typeSize; i++)
+				Temp_Resource_Values.pop_back();
+
+		this->Resource_Types = Temp_Resource_Types;
+		this->Resource_Values = Temp_Resource_Values;
 	}
 }
 
@@ -173,7 +178,8 @@ void HouseExt::ExtData::Serialize(T& Stm)
 		.Process(this->Factory_NavyType)
 		.Process(this->Factory_AircraftType)
 		.Process(this->RepairBaseNodes)
-		.Process(this->Variables)
+		.Process(this->Resource_Types)
+		.Process(this->Resource_Values)
 		;
 }
 
