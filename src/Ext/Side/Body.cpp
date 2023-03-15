@@ -39,6 +39,10 @@ void SideExt::ExtData::LoadFromINIFile(CCINIClass* pINI)
 	this->ToolTip_Background_Color.Read(exINI, pSection, "ToolTip.Background.Color");
 	this->ToolTip_Background_Opacity.Read(exINI, pSection, "ToolTip.Background.Opacity");
 	this->ToolTip_Background_BlurSize.Read(exINI, pSection, "ToolTip.Background.BlurSize");
+	this->Sidebar_DebtCounter_Offset.Read(exINI, pSection, "Sidebar.DebtCounter.Offset");
+	this->Sidebar_DebtCounter_Green.Read(exINI, pSection, "Sidebar.DebtCounter.ColorGreen");
+	this->Sidebar_DebtCounter_Yellow.Read(exINI, pSection, "Sidebar.DebtCounter.ColorYellow");
+	this->Sidebar_DebtCounter_Red.Read(exINI, pSection, "Sidebar.DebtCounter.ColorRed");
 }
 
 // =============================
@@ -65,6 +69,10 @@ void SideExt::ExtData::Serialize(T& Stm)
 		.Process(this->ToolTip_Background_BlurSize)
 		.Process(this->IngameScore_WinTheme)
 		.Process(this->IngameScore_LoseTheme)
+		.Process(this->Sidebar_DebtCounter_Offset)
+		.Process(this->Sidebar_DebtCounter_Green)
+		.Process(this->Sidebar_DebtCounter_Yellow)
+		.Process(this->Sidebar_DebtCounter_Red)
 		;
 }
 

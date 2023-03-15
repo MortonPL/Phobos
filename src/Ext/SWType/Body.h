@@ -7,6 +7,7 @@
 #include <Utilities/Container.h>
 #include <Utilities/TemplateDef.h>
 
+#include <Ext/House/Body.h>
 #include <Ext/Building/Body.h>
 
 class SWTypeExt
@@ -55,6 +56,11 @@ public:
 		std::vector<ValueableVector<int>> LimboDelivery_RandomWeightsData;
 		std::vector<ValueableVector<int>> SW_Next_RandomWeightsData;
 
+		Valueable<bool> Trade;
+		Valueable<bool> Trade_UseDebt;
+		Valueable<float> Trade_Price_Power;
+		Valueable<float> Trade_Price_Debt;
+
 		ExtData(SuperWeaponTypeClass* OwnerObject) : Extension<SuperWeaponTypeClass>(OwnerObject)
 			, Money_Amount { 0 }
 			, SW_Inhibitors {}
@@ -87,7 +93,18 @@ public:
 			, SW_Next_RollChances {}
 			, SW_Next_RandomWeightsData {}
 			, ShowTimer_Priority { 0 }
+			, Trade { false }
+			, Trade_UseDebt { false }
+			, Trade_Price_Power { 0.0 }
+			, Trade_Price_Debt { 0.0 }
 		{ }
+
+		struct TradeResourceStruct
+		{
+			int Amount;
+			float Price;
+			void (*TransactFunction)(HouseExt::ExtData*, HouseClass*, int, bool);
+		};
 
 		// Ares 0.A functions
 		bool IsInhibitor(HouseClass* pOwner, TechnoClass* pTechno) const;
@@ -105,6 +122,7 @@ public:
 		void ApplyLimboKill(HouseClass* pHouse);
 		void ApplyDetonation(HouseClass* pHouse, const CellStruct& cell);
 		void ApplySWNext(SuperClass* pSW, const CellStruct& cell);
+		void ApplyTrade(HouseClass* pHouse);
 
 		virtual void LoadFromINIFile(CCINIClass* pINI) override;
 		virtual ~ExtData() = default;

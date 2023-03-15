@@ -29,6 +29,9 @@ void SWTypeExt::FireSuperWeaponExt(SuperClass* pSW, const CellStruct& cell)
 
 		if (pTypeExt->SW_Next.size() > 0)
 			pTypeExt->ApplySWNext(pSW, cell);
+
+		if (pTypeExt->Trade)
+			pTypeExt->ApplyTrade(pSW->Owner);
 	}
 }
 
@@ -284,5 +287,52 @@ void SWTypeExt::ExtData::ApplySWNext(SuperClass* pSW, const CellStruct& cell)
 	{
 		for (const auto swType : this->SW_Next)
 			LaunchTheSW(swType);
+	}
+}
+
+namespace SWTrade
+{
+	void TransactMoney(HouseExt::ExtData* pHouseExt, HouseClass* pHouse, int amount, bool useDebt)
+	{
+		if (amount >= 0)
+		{
+			pHouse->GiveMoney(amount);
+		}
+		else
+		{
+			if (useDebt)
+				pHouseExt->Debt += amount;
+			else
+				pHouse->TakeMoney(amount);
+		}
+	}
+}
+
+void SWTypeExt::ExtData::ApplyTrade(HouseClass* pHouse)
+{
+	auto pHouseExt = HouseExt::ExtMap.Find(pHouse);
+
+	auto resources = std::vector<SWTypeExt::ExtData::TradeResourceStruct>();
+	auto powerStruct = SWTypeExt::ExtData::TradeResourceStruct
+	{
+		pHouse->PowerOutput - pHouse->PowerDrain,
+		this->Trade_Price_Power,
+		SWTrade::TransactMoney,
+	};
+	auto debtStruct = SWTypeExt::ExtData::TradeResourceStruct
+	{
+		pHouseExt->Debt,
+		this->Trade_Price_Debt,
+		SWTrade::TransactMoney,
+	};
+	resources.push_back(powerStruct);
+	resources.push_back(debtStruct);
+
+	for (auto resource: resources)
+	{
+		if (LESS_EQUAL(resource.Price, 0.0))
+			return;
+		int total = resource.Amount * resource.Price;
+		resource.TransactFunction(pHouseExt, pHouse, total, this->Trade_UseDebt);
 	}
 }

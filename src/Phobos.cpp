@@ -48,10 +48,12 @@ const wchar_t* Phobos::UI::PowerLabel = L"";
 const wchar_t* Phobos::UI::PowerBlackoutLabel = L"";
 const wchar_t* Phobos::UI::TimeLabel = L"";
 const wchar_t* Phobos::UI::HarvesterLabel = L"";
+const wchar_t* Phobos::UI::DebtLabel = L"";
 bool Phobos::UI::ShowPowerDelta = false;
 double Phobos::UI::PowerDelta_ConditionYellow = 0.75;
 double Phobos::UI::PowerDelta_ConditionRed = 1.0;
 bool Phobos::UI::CenterPauseMenuBackground = false;
+bool Phobos::UI::ShowDebtCounter = false;
 
 bool Phobos::Config::ToolTipDescriptions = true;
 bool Phobos::Config::ToolTipBlur = false;
@@ -273,6 +275,12 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 
 		Phobos::UI::CenterPauseMenuBackground =
 			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "CenterPauseMenuBackground", Phobos::UI::CenterPauseMenuBackground);
+
+		Phobos::UI::ShowDebtCounter =
+			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "DebtCounter.Show", false);
+
+		pINI_UIMD->ReadString(SIDEBAR_SECTION, "DebtCounter.Label", NONE_STR, Phobos::readBuffer);
+		Phobos::UI::DebtLabel = GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"\u21d8"); // ⇘
 	}
 
 	Phobos::CloseConfig(pINI_UIMD);

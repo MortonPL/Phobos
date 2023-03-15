@@ -43,6 +43,10 @@ void SWTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->SW_Next_RandomWeightsData)
 		.Process(this->SW_Next_RollChances)
 		.Process(this->ShowTimer_Priority)
+		.Process(this->Trade)
+		.Process(this->Trade_UseDebt)
+		.Process(this->Trade_Price_Power)
+		.Process(this->Trade_Price_Debt)
 		;
 }
 
@@ -135,6 +139,10 @@ void SWTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->Detonate_Weapon.Read(exINI, pSection, "Detonate.Weapon", true);
 	this->Detonate_Damage.Read(exINI, pSection, "Detonate.Damage");
 	this->Detonate_AtFirer.Read(exINI, pSection, "Detonate.AtFirer");
+	this->Trade.Read(exINI, pSection, "Trade");
+	this->Trade_UseDebt.Read(exINI, pSection, "Trade.UseDebt");
+	this->Trade_Price_Power.Read(exINI, pSection, "Trade.Price.Power");
+	this->Trade_Price_Debt.Read(exINI, pSection, "Trade.Price.Debt");
 }
 
 void SWTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)

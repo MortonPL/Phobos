@@ -19,6 +19,7 @@ public:
 		std::map<BuildingTypeExt::ExtData*, int> BuildingCounter;
 		std::map<BuildingClass*, BuildingExt::ExtData*> OwnedLimboDeliveredBuildings;
 		std::vector<TechnoExt::ExtData*> OwnedTimedAutoDeathObjects;
+		int Debt;
 
 		BuildingClass* Factory_BuildingType;
 		BuildingClass* Factory_InfantryType;
@@ -33,6 +34,7 @@ public:
 			, BuildingCounter {}
 			, OwnedLimboDeliveredBuildings {}
 			, OwnedTimedAutoDeathObjects {}
+			, Debt { 0 }
 			, Factory_BuildingType { nullptr }
 			, Factory_InfantryType { nullptr }
 			, Factory_VehicleType { nullptr }
