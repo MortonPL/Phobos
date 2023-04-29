@@ -1,0 +1,103 @@
+#include "Misc/AresData.h"
+#include <Utilities/Macro.h>
+#include "BuildingClass.h"
+#include "HouseClass.h"
+
+std::pair<int, BuildingClass*>* AresHasFactory(std::pair<int, BuildingClass*>* buffer, HouseClass* pOwner, TechnoTypeClass* pType, bool skipAircraft, bool requirePower, bool checkCanBuild, bool unknown)
+{
+	if (checkCanBuild && pOwner->CanBuild(pType, true, true) != CanBuildResult::Buildable)
+	{
+		*buffer = { 0, nullptr };
+		return buffer;
+	}
+
+	AbstractType technoRTTI = pType->What_Am_I();
+	BuildingClass* pResult = nullptr;
+	BuildingClass* pResultButOffline = nullptr;
+
+	for (const auto& pBuilding : pOwner->Buildings)
+	{
+		if (pBuilding->InLimbo
+			|| pBuilding->Type->Factory != technoRTTI
+			|| pBuilding->CurrentMission == Mission::Selling
+			|| pBuilding->QueuedMission == Mission::Selling
+			|| (pBuilding->Type->GetOwners() & pType->GetOwners()) == 0)
+			continue;
+
+		if (!skipAircraft
+			&& technoRTTI == AbstractType::AircraftType
+			&& pBuilding->HasAnyLink()
+			&& ((AircraftTypeClass*)(pType))->AirportBound // <=== CHANGE IS HERE
+			&& !pBuilding->HasFreeLink())
+			continue;
+
+		if (technoRTTI == AbstractType::UnitType && pType->Naval && !pBuilding->Type->Naval)
+			continue;
+
+		if (!AresData::CanBeBuiltAt(pType->align_2FC, pBuilding->Type))
+			continue;
+
+		if (requirePower && (!pBuilding->HasPower || pBuilding->Deactivated))
+		{
+			pResultButOffline = pBuilding;
+		}
+		else
+		{
+			pResult = pBuilding;
+			if (pBuilding->IsPrimaryFactory)
+			{
+				*buffer = { 4, pResult };
+				return buffer;
+			}
+			if (unknown)
+				break;
+		}
+	}
+
+	if (pResult)
+		*buffer = { 3, pResult };
+	else if (pResultButOffline)
+		*buffer = { 2, pResultButOffline };
+	else
+		*buffer = { 1, nullptr };
+
+	return buffer;
+}
+
+// Who_Can_Build_Me_DisableAres
+DEFINE_PATCH(0x5F7900, 0x83, 0xEC, 0x08, 0x53, 0x55);
+
+DEFINE_HOOK(0x5F7900, Who_Can_Build_Me_AircraftBoundChange, 0x5)
+{
+	if (!AresData::CanUseAres)
+		return 0;
+
+	GET(TechnoTypeClass*, pThis, ECX);
+	GET_STACK(bool, skipAircraft, STACK_OFFSET(0x0, 0x4));
+	GET_STACK(bool, requirePower, STACK_OFFSET(0x0, 0x8));
+	GET_STACK(bool, checkCanBuild, STACK_OFFSET(0x0, 0xC));
+	GET_STACK(HouseClass*, pHouse, STACK_OFFSET(0x0, 0x10));
+
+	// replace Ares HouseExt::HasFactory()
+	std::pair<int, BuildingClass*> buffer;
+	AresHasFactory(&buffer, pHouse, pThis, skipAircraft, requirePower, checkCanBuild, false);
+	if (buffer.first >= 3)
+		R->EAX(buffer.second);
+	else
+		R->EAX(NULL);
+
+	return 0x5F7A89;
+}
+
+DEFINE_HOOK(0x5F79F4, Who_Can_Build_Me_AircraftBoundChangeVanilla, 0x5)
+{
+	enum { Buildable = 0x5F7A03, NotBuildable = 0x5F7A57 };
+
+	GET(ObjectTypeClass*, pAircraft, EDI);
+	GET(BuildingClass*, pBuilding, ECX);
+
+	const bool canBuild = !((AircraftTypeClass*)(pAircraft))->AirportBound || pBuilding->HasFreeLink();
+	R->EAX(pBuilding->IsPrimaryFactory);
+
+	return canBuild ? Buildable : NotBuildable;
+}
