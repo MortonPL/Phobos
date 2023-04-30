@@ -101,3 +101,21 @@ DEFINE_HOOK(0x5F79F4, Who_Can_Build_Me_AircraftBoundChangeVanilla, 0x5)
 
 	return canBuild ? Buildable : NotBuildable;
 }
+
+
+DEFINE_HOOK(0x443E95, BuildingClass_ExitObject_AboveFactory, 0x6)
+{
+	GET(BuildingClass*, pBuilding, ESI)
+
+	REF_STACK(int, posX, STACK_OFFSET(0x148, -0xD0));
+	REF_STACK(int, posY, STACK_OFFSET(0x148, -0xCC));
+	REF_STACK(int, posZ, STACK_OFFSET(0x148, -0xC8));
+
+	const auto pos = pBuilding->GetCenterCoords();
+
+	posX = pos.X;
+	posY = pos.Y;
+	posZ = pos.Z + 1024;
+
+	return 0x443EA0;
+}
