@@ -1,5 +1,6 @@
 #include "Utilities/AresFunctions.h"
 #include <Utilities/Macro.h>
+#include <Phobos.h>
 #include "BuildingClass.h"
 #include "HouseClass.h"
 
@@ -32,7 +33,7 @@ std::pair<int, BuildingClass*>* AresRemiplemented::HasFactory(std::pair<int, Bui
 		if (!skipAircraft
 			&& technoRTTI == AbstractType::AircraftType
 			&& pBuilding->HasAnyLink()
-			&& ((AircraftTypeClass*)(pType))->AirportBound // <=== CHANGE IS HERE
+			&& (!Phobos::Misc::NotAirportBoundLimitBreak || ((AircraftTypeClass*)(pType))->AirportBound) // <=== CHANGE IS HERE
 			&& !pBuilding->HasFreeLink())
 			continue;
 
@@ -69,9 +70,6 @@ std::pair<int, BuildingClass*>* AresRemiplemented::HasFactory(std::pair<int, Bui
 	return buffer;
 }
 
-// Who_Can_Build_Me_DisableAres
-DEFINE_PATCH(0x5F7900, 0x83, 0xEC, 0x08, 0x53, 0x55);
-
 DEFINE_HOOK(0x5F7900, Who_Can_Build_Me_AircraftBoundChange, 0x5)
 {
 	if (!IS_ARES_FUN_AVAILABLE(CanBeBuiltAt))
@@ -101,13 +99,13 @@ DEFINE_HOOK(0x5F79F4, Who_Can_Build_Me_AircraftBoundChangeVanilla, 0x5)
 	GET(ObjectTypeClass*, pAircraft, EDI);
 	GET(BuildingClass*, pBuilding, ECX);
 
-	const bool canBuild = !((AircraftTypeClass*)(pAircraft))->AirportBound || pBuilding->HasFreeLink();
+	const bool canBuild = (Phobos::Misc::NotAirportBoundLimitBreak && !((AircraftTypeClass*)(pAircraft))->AirportBound) || pBuilding->HasFreeLink();
 	R->EAX(pBuilding->IsPrimaryFactory);
 
 	return canBuild ? Buildable : NotBuildable;
 }
 
-DEFINE_HOOK(0x443E95, BuildingClass_ExitObject_AboveFactory, 0x6)
+DEFINE_HOOK(0x443E95, BuildingClass_ExitObject_AboveFactory, 0xB)
 {
 	GET(BuildingClass*, pBuilding, ESI)
 

@@ -304,10 +304,22 @@ DetachedReport=  ; sound entry
 
 ### No production limit on non-AirportBound aircraft
 
-- ...
+- It is now possible to disable free airfield pad check for aircraft with `AirportBound=no` with `NotAirportBoundLimitBreak=true`.
+  - If there are no free pads left, aircraft will spawn in the middle of airfield at surface level and take of to nearest free space.
+  - If there are free pads, aircraft will spawn on pads as usual.
 
 In `rulesmd.ini`:
 ```ini
+[General]
+NotAirportBoundLimitBreak=false     ; boolean
+```
+
+### Spawn aircraft offmap
+
+In `rulesmd.ini`:
+```ini
+[General]
+NotAirportBoundLimitBreak=false     ; boolean
 ```
 
 ## Buildings

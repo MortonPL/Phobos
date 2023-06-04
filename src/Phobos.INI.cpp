@@ -48,6 +48,7 @@ bool Phobos::Misc::CustomGS = false;
 int Phobos::Misc::CustomGS_ChangeInterval[7] = { -1, -1, -1, -1, -1, -1, -1 };
 int Phobos::Misc::CustomGS_ChangeDelay[7] = { 0, 1, 2, 3, 4, 5, 6 };
 int Phobos::Misc::CustomGS_DefaultDelay[7] = { 0, 1, 2, 3, 4, 5, 6 };
+bool Phobos::Misc::NotAirportBoundLimitBreak = false;
 
 DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 {
@@ -170,6 +171,15 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 		temp = pINI_RULESMD->ReadInteger(GameStrings::General, tempBuffer, -1);
 		if (temp >= 1)
 			Phobos::Misc::CustomGS_ChangeInterval[i] = temp;
+	}
+
+	Phobos::Misc::NotAirportBoundLimitBreak = pINI_RULESMD->ReadBool(GameStrings::General, "NotAirportBoundLimitBreak", false);
+	if (Phobos::Misc::NotAirportBoundLimitBreak)
+	{
+		// Who_Can_Build_Me_DisableAres
+		byte original_bytes[] = { 0x83, 0xEC, 0x08, 0x53, 0x55 };
+		Patch patch = { 0x5F7900, 0x5, original_bytes };
+		patch.Apply();
 	}
 
 	if (pINI_RULESMD->ReadBool(GameStrings::General, "FixTransparencyBlitters", true))
