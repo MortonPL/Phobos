@@ -40,7 +40,7 @@ std::pair<int, BuildingClass*>* AresRemiplemented::HasFactory(std::pair<int, Bui
 		if (technoRTTI == AbstractType::UnitType && pType->Naval && !pBuilding->Type->Naval)
 			continue;
 
-		if (!AresFunctions::CanBeBuiltAt(pType->align_2FC, pBuilding->Type))
+		if (!AresFunctions::CanBeBuiltAt((AresTechnoTypeExt*)pType->align_2FC, pBuilding->Type))
 			continue;
 
 		if (requirePower && (!pBuilding->HasPower || pBuilding->Deactivated))
