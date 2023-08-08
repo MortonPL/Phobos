@@ -923,6 +923,25 @@ Spawner.ExtraLimitRange=0  ; integer, range in cells
 Spawner.DelayFrames=       ; integer, game frames
 ```
 
+(New_Enhanced_Supply)=
+### Supply system
+
+- Units with non-zero `SupplyDrain` will contribute to the "supply" system of each player.
+    - Negative values will increase the "drain" of "supply", while positive values will increase "supply output".
+- When "supply drain" exceeds "supply output", the difference of these values will increase build time of technos with `SubjectToSupply=yes`.
+- Resulting build time penalty can be controlled with `SupplyPenaltyPerUnit`, which specifies the multiplier to build time to apply for each supply unit.
+    - In example: if "supply drain" is 10 and "supply output" is 5 and `SupplyPenaltyPerUnit=0.1`, the resulting penalty is (10-5)*0.1 = +50% build time.
+
+In `rulesmd.ini`:
+```ini
+[General]
+SupplyPenaltyPerUnit=1.0    ; float, 1.0 is 100% build time increase
+
+[SOMETECHNO]
+SupplyDrain=0               ; integer
+SubjectToSupply=yes         ; boolean
+```
+
 ### Weapons fired on warping in / out
 
 - It is now possible to add weapons that are fired on a teleporting TechnoType when it warps in or out. They are at the same time as the appropriate animations (`WarpIn` / `WarpOut`) are displayed.

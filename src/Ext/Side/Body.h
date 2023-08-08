@@ -34,6 +34,9 @@ public:
 		Nullable<int> ToolTip_Background_Opacity;
 		Nullable<float> ToolTip_Background_BlurSize;
 		Valueable<int> BriefingTheme;
+		Valueable<Point2D> Sidebar_SupplyCounter_Offset;
+		Valueable<ColorStruct> Sidebar_SupplyCounter_Yellow;
+		Valueable<ColorStruct> Sidebar_SupplyCounter_Red;
 
 		ExtData(SideClass* OwnerObject) : Extension<SideClass>(OwnerObject)
 			, ArrayIndex { -1 }
@@ -54,6 +57,9 @@ public:
 			, ToolTip_Background_Opacity { }
 			, ToolTip_Background_BlurSize { }
 			, BriefingTheme { -1 }
+			, Sidebar_SupplyCounter_Offset { { 0, 0 } }
+			, Sidebar_SupplyCounter_Yellow { { 255, 255, 0 } }
+			, Sidebar_SupplyCounter_Red { { 255, 0, 0 } }
 		{ }
 
 		virtual ~ExtData() = default;

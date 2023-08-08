@@ -425,6 +425,35 @@ In `rulesmd.ini`:
 Sidebar.GDIPositions=  ; boolean
 ```
 
+### Supply counter
+
+- An additional counter for [supply system](New_Enhanced_Supply) status can be added near the credits indicator.
+- The counter is displayed with the format of `Label(Used Supply)/(Max Supply)`.
+- `SupplyCounter.Label` in `ToolTips` can be used to customize the label (by default ⛽ `U+26FD`).
+- You can adjust counter position by `Sidebar.SupplyCounter.Offset`, negative means left/up, positive means right/down.
+- By setting `SupplyCounter.ConditionYellow` and `SupplyCounter.ConditionRed`, the game will warn player by changing the color of counter whenever the percentage of used power exceeds the value (i.e. when used supply is above max supply, the counter will turn red).
+- When maximum supply is 0, the counter will default to yellow.
+
+In `uimd.ini`:
+```ini
+[Sidebar]
+SupplyCounter.Show=false           ; boolean
+SupplyCounter.ConditionYellow=100% ; floating point value, percents
+SupplyCounter.ConditionRed=101%    ; floating point value, percents
+```
+
+In `rulesmd.ini`:
+```ini
+[SOMESIDE]                                   ; Side
+Sidebar.SupplyCounter.Offset=0,0             ; X,Y, pixels relative to default
+Sidebar.SupplyCounter.ColorYellow=255,255,0  ; integer - R,G,B
+Sidebar.SupplyCounter.ColorRed=255,0,0       ; integer - R,G,B
+```
+
+```{note}
+If you use the vanilla font in your mod, you can use the improved font (v6 and higher; can be found on [Phobos supplementaries repo](https://github.com/Phobos-developers/PhobosSupplementaries)) which among everything already includes the mentioned icons. Otherwise you'd need to draw them yourself using [WWFontEditor](http://nyerguds.arsaneus-design.com/project_stuff/2016/WWFontEditor/release/?C=M;O=D), for example.
+```
+
 ## Tooltips
 
 ![image](_static/images/tooltips-01.png)

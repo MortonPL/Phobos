@@ -36,6 +36,9 @@ public:
 		BuildingClass* Factory_NavyType;
 		BuildingClass* Factory_AircraftType;
 
+		int SupplyCurrent;
+		int SupplyMax;
+
 		//Read from INI
 		bool RepairBaseNodes[3];
 
@@ -56,6 +59,8 @@ public:
 			, Factory_VehicleType { nullptr }
 			, Factory_NavyType { nullptr }
 			, Factory_AircraftType { nullptr }
+			, SupplyCurrent { 0 }
+			, SupplyMax { 0 }
 			, RepairBaseNodes { false,false,false }
 			, LastBuiltNavalVehicleType { -1 }
 			, ProducingNavalUnitTypeIndex { -1 }
@@ -67,6 +72,7 @@ public:
 		void AddToLimboTracking(TechnoTypeClass* pTechnoType);
 		void RemoveFromLimboTracking(TechnoTypeClass* pTechnoType);
 		int CountOwnedPresentAndLimboed(TechnoTypeClass* pTechnoType);
+		void RecheckSupply();
 
 		virtual ~ExtData() = default;
 

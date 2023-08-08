@@ -22,10 +22,14 @@ const wchar_t* Phobos::UI::PowerLabel = L"";
 const wchar_t* Phobos::UI::PowerBlackoutLabel = L"";
 const wchar_t* Phobos::UI::TimeLabel = L"";
 const wchar_t* Phobos::UI::HarvesterLabel = L"";
+const wchar_t* Phobos::UI::SupplyLabel = L"";
 bool Phobos::UI::ShowPowerDelta = false;
 double Phobos::UI::PowerDelta_ConditionYellow = 0.75;
 double Phobos::UI::PowerDelta_ConditionRed = 1.0;
 bool Phobos::UI::CenterPauseMenuBackground = false;
+bool Phobos::UI::ShowSupplyCounter = false;
+double Phobos::UI::SupplyCounter_ConditionYellow = 1.0;
+double Phobos::UI::SupplyCounter_ConditionRed = 1.01;
 
 bool Phobos::Config::ToolTipDescriptions = true;
 bool Phobos::Config::ToolTipBlur = false;
@@ -113,6 +117,18 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 
 		Phobos::UI::CenterPauseMenuBackground =
 			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "CenterPauseMenuBackground", Phobos::UI::CenterPauseMenuBackground);
+
+		Phobos::UI::ShowSupplyCounter =
+			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "SupplyCounter.Show", false);
+
+		Phobos::UI::SupplyCounter_ConditionYellow =
+			pINI_UIMD->ReadDouble(SIDEBAR_SECTION, "SupplyCounter.ConditionYellow", Phobos::UI::SupplyCounter_ConditionYellow);
+
+		Phobos::UI::SupplyCounter_ConditionRed =
+			pINI_UIMD->ReadDouble(SIDEBAR_SECTION, "SupplyCounter.ConditionRed", Phobos::UI::SupplyCounter_ConditionYellow);
+
+		pINI_UIMD->ReadString(SIDEBAR_SECTION, "SupplyCounter.Label", NONE_STR, Phobos::readBuffer);
+		Phobos::UI::SupplyLabel = GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"\u26fd"); // ⛽
 	}
 
 	CCINIClass::UnloadINIFile(pINI_UIMD);

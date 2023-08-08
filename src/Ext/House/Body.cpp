@@ -497,6 +497,17 @@ void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 }
 
+void HouseExt::ExtData::RecheckSupply()
+{
+	if (this->SupplyCurrent <= this->SupplyMax)
+	{
+		this->OwnerObject()->BuildTimeMultiplier = 1.0f;
+		return;
+	}
+
+	this->OwnerObject()->BuildTimeMultiplier = 1.0f + std::max(0, this->SupplyCurrent - this->SupplyMax) * RulesExt::Global()->SupplyPenaltyPerUnit;
+}
+
 // =============================
 // load / save
 
@@ -520,6 +531,8 @@ void HouseExt::ExtData::Serialize(T& Stm)
 		.Process(this->RepairBaseNodes)
 		.Process(this->LastBuiltNavalVehicleType)
 		.Process(this->ProducingNavalUnitTypeIndex)
+		.Process(this->SupplyCurrent)
+		.Process(this->SupplyMax)
 		;
 }
 

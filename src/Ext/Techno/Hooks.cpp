@@ -456,3 +456,15 @@ DEFINE_HOOK(0x51BAFB, InfantryClass_ChronoSparkleDelay, 0x5)
 	R->ECX(RulesExt::Global()->ChronoSparkleDisplayDelay);
 	return 0x51BB00;
 }
+
+DEFINE_HOOK(0x6F4955, TechnoClass_TimeToBuild_Supply, 0x1)
+{
+	GET(int, buildTime, EAX);
+	GET(TechnoClass*, pTechno, ECX);
+
+	auto pExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
+	if (pExt->SubjectToSupply)
+		R->EAX((int)(buildTime * pTechno->Owner->BuildTimeMultiplier));
+
+	return 0;
+}

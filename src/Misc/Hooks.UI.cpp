@@ -145,6 +145,31 @@ DEFINE_HOOK(0x4A25E0, CreditsClass_GraphicLogic_HarvesterCounter, 0x7)
 		DSurface::Sidebar->DrawText(counter, &vRect, &vPos, Drawing::RGB_To_Int(clrToolTip), 0, TextFlags);
 	}
 
+	if (Phobos::UI::ShowSupplyCounter)
+	{
+		auto pHouseExt = HouseExt::ExtMap.Find(pPlayer);
+
+		auto pSideExt = SideExt::ExtMap.Find(SideClass::Array->GetItem(pPlayer->SideIndex));
+		wchar_t counter[0x20];
+		auto nDrain = pHouseExt->SupplyCurrent;
+		auto nMax = pHouseExt->SupplyMax;
+		auto nPercentage = nMax == 0 ? 1.0 : (double)nDrain / (double)nMax;
+
+		ColorStruct clrToolTip = nPercentage < Phobos::UI::SupplyCounter_ConditionYellow
+			? Drawing::TooltipColor() : LESS_EQUAL(nPercentage, Phobos::UI::SupplyCounter_ConditionRed)
+			? pSideExt->Sidebar_SupplyCounter_Yellow : pSideExt->Sidebar_SupplyCounter_Red;
+
+		swprintf_s(counter, L"%ls%d/%d", Phobos::UI::SupplyLabel, nDrain, nMax);
+
+		Point2D vPos = {
+			DSurface::Sidebar->GetWidth() / 2 + 50 + pSideExt->Sidebar_SupplyCounter_Offset.Get().X,
+			2 + pSideExt->Sidebar_SupplyCounter_Offset.Get().Y
+		};
+
+		DSurface::Sidebar->DrawText(counter, &vRect, &vPos, Drawing::RGB_To_Int(clrToolTip), 0,
+			TextPrintType::UseGradPal | TextPrintType::Center | TextPrintType::Metal12);
+	}
+
 	return 0;
 }
 

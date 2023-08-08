@@ -250,3 +250,40 @@ DEFINE_HOOK(0x65E997, HouseClass_SendAirstrike_PlaceAircraft, 0x6)
 
 	return result ? SkipGameCode : SkipGameCodeNoSuccess;
 }
+
+
+DEFINE_HOOK(0x5025F0, HouseClass_RegisterLoss_SuppliedUnits, 0x5)
+{
+	GET(HouseClass*, pHouse, ECX);
+	GET_STACK(TechnoClass*, pTechno, STACK_OFFSET(0x0, 0x4));
+
+	auto pHouseExt = HouseExt::ExtMap.Find(pHouse);
+	auto pTypeExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
+
+	if (pTypeExt->SupplyDrain >= 0)
+		pHouseExt->SupplyMax -= pTypeExt->SupplyDrain;
+	else
+		pHouseExt->SupplyCurrent -= -pTypeExt->SupplyDrain;
+
+	pHouseExt->RecheckSupply();
+
+	return 0;
+}
+
+DEFINE_HOOK(0x502A80, HouseClass_RegisterGain_SuppliedUnits, 0x8)
+{
+	GET(HouseClass*, pHouse, ECX);
+	GET_STACK(TechnoClass*, pTechno, STACK_OFFSET(0x0, 0x4));
+
+	auto pHouseExt = HouseExt::ExtMap.Find(pHouse);
+	auto pTypeExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
+
+	if (pTypeExt->SupplyDrain >= 0)
+		pHouseExt->SupplyMax += pTypeExt->SupplyDrain;
+	else
+		pHouseExt->SupplyCurrent += -pTypeExt->SupplyDrain;
+
+	pHouseExt->RecheckSupply();
+
+	return 0;
+}

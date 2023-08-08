@@ -207,6 +207,9 @@ public:
 		std::vector<std::vector<CoordStruct>> DeployedWeaponBurstFLHs;
 		std::vector<std::vector<CoordStruct>> EliteDeployedWeaponBurstFLHs;
 
+		Valueable<int> SupplyDrain;
+		Valueable<bool> SubjectToSupply;
+
 		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
 			, HealthBar_Hide { false }
 			, UIDescription {}
@@ -359,6 +362,8 @@ public:
 
 			, SpawnDistanceFromTarget {}
 			, SpawnHeight {}
+			, SupplyDrain { 0 }
+			, SubjectToSupply { true }
 		{ }
 
 		virtual ~ExtData() = default;

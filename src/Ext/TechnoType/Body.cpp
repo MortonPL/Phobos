@@ -273,6 +273,9 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->SpawnDistanceFromTarget.Read(exINI, pSection, "SpawnDistanceFromTarget");
 	this->SpawnHeight.Read(exINI, pSection, "SpawnHeight");
 
+	this->SupplyDrain.Read(exINI, pSection, "SupplyDrain");
+	this->SubjectToSupply.Read(exINI, pSection, "SubjectToSupply");
+
 	// Ares 0.2
 	this->RadarJamRadius.Read(exINI, pSection, "RadarJamRadius");
 
