@@ -1,9 +1,14 @@
-#include "Misc/AresData.h"
+#include "Utilities/AresFunctions.h"
 #include <Utilities/Macro.h>
 #include "BuildingClass.h"
 #include "HouseClass.h"
 
-std::pair<int, BuildingClass*>* AresHasFactory(std::pair<int, BuildingClass*>* buffer, HouseClass* pOwner, TechnoTypeClass* pType, bool skipAircraft, bool requirePower, bool checkCanBuild, bool unknown)
+namespace AresRemiplemented
+{
+	std::pair<int, BuildingClass*>* HasFactory(std::pair<int, BuildingClass*>* buffer, HouseClass* pOwner, TechnoTypeClass* pType, bool skipAircraft, bool requirePower, bool checkCanBuild, bool unknown);
+}
+
+std::pair<int, BuildingClass*>* AresRemiplemented::HasFactory(std::pair<int, BuildingClass*>* buffer, HouseClass* pOwner, TechnoTypeClass* pType, bool skipAircraft, bool requirePower, bool checkCanBuild, bool unknown)
 {
 	if (checkCanBuild && pOwner->CanBuild(pType, true, true) != CanBuildResult::Buildable)
 	{
@@ -34,7 +39,7 @@ std::pair<int, BuildingClass*>* AresHasFactory(std::pair<int, BuildingClass*>* b
 		if (technoRTTI == AbstractType::UnitType && pType->Naval && !pBuilding->Type->Naval)
 			continue;
 
-		if (!AresData::CanBeBuiltAt(pType->align_2FC, pBuilding->Type))
+		if (!AresFunctions::CanBeBuiltAt(pType->align_2FC, pBuilding->Type))
 			continue;
 
 		if (requirePower && (!pBuilding->HasPower || pBuilding->Deactivated))
@@ -69,7 +74,7 @@ DEFINE_PATCH(0x5F7900, 0x83, 0xEC, 0x08, 0x53, 0x55);
 
 DEFINE_HOOK(0x5F7900, Who_Can_Build_Me_AircraftBoundChange, 0x5)
 {
-	if (!AresData::CanUseAres)
+	if (!IS_ARES_FUN_AVAILABLE(CanBeBuiltAt))
 		return 0;
 
 	GET(TechnoTypeClass*, pThis, ECX);
@@ -80,7 +85,7 @@ DEFINE_HOOK(0x5F7900, Who_Can_Build_Me_AircraftBoundChange, 0x5)
 
 	// replace Ares HouseExt::HasFactory()
 	std::pair<int, BuildingClass*> buffer;
-	AresHasFactory(&buffer, pHouse, pThis, skipAircraft, requirePower, checkCanBuild, false);
+	AresRemiplemented::HasFactory(&buffer, pHouse, pThis, skipAircraft, requirePower, checkCanBuild, false);
 	if (buffer.first >= 3)
 		R->EAX(buffer.second);
 	else
@@ -102,7 +107,6 @@ DEFINE_HOOK(0x5F79F4, Who_Can_Build_Me_AircraftBoundChangeVanilla, 0x5)
 	return canBuild ? Buildable : NotBuildable;
 }
 
-
 DEFINE_HOOK(0x443E95, BuildingClass_ExitObject_AboveFactory, 0x6)
 {
 	GET(BuildingClass*, pBuilding, ESI)
@@ -112,10 +116,9 @@ DEFINE_HOOK(0x443E95, BuildingClass_ExitObject_AboveFactory, 0x6)
 	REF_STACK(int, posZ, STACK_OFFSET(0x148, -0xC8));
 
 	const auto pos = pBuilding->GetCenterCoords();
-
 	posX = pos.X;
 	posY = pos.Y;
-	posZ = pos.Z + 1024;
+	posZ = pos.Z + 1024; // note: might be placebo? aircraft emerges from pad regardless of this value
 
 	return 0x443EA0;
 }

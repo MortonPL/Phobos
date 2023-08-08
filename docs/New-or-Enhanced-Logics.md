@@ -300,6 +300,16 @@ In `artmd.ini`:
 DetachedReport=  ; sound entry
 ```
 
+## AircraftTypes
+
+### No production limit on non-AirportBound aircraft
+
+- ...
+
+In `rulesmd.ini`:
+```ini
+```
+
 ## Buildings
 
 ### Extended building upgrades
