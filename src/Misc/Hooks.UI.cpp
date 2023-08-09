@@ -147,17 +147,22 @@ DEFINE_HOOK(0x4A25E0, CreditsClass_GraphicLogic_HarvesterCounter, 0x7)
 
 	if (Phobos::UI::ShowSupplyCounter)
 	{
-		auto pHouseExt = HouseExt::ExtMap.Find(pPlayer);
+		const auto pHouseExt = HouseExt::ExtMap.Find(pPlayer);
 
-		auto pSideExt = SideExt::ExtMap.Find(SideClass::Array->GetItem(pPlayer->SideIndex));
+		const auto pSideExt = SideExt::ExtMap.Find(SideClass::Array->GetItem(pPlayer->SideIndex));
 		wchar_t counter[0x20];
-		auto nDrain = pHouseExt->SupplyCurrent;
-		auto nMax = pHouseExt->SupplyMax;
-		auto nPercentage = nMax == 0 ? 1.0 : (double)nDrain / (double)nMax;
+		const auto nDrain = pHouseExt->SupplyCurrent;
+		const auto nMax = pHouseExt->SupplyMax;
 
-		ColorStruct clrToolTip = nPercentage < Phobos::UI::SupplyCounter_ConditionYellow
-			? Drawing::TooltipColor() : LESS_EQUAL(nPercentage, Phobos::UI::SupplyCounter_ConditionRed)
-			? pSideExt->Sidebar_SupplyCounter_Yellow : pSideExt->Sidebar_SupplyCounter_Red;
+		ColorStruct clrToolTip = pSideExt->Sidebar_SupplyCounter_Yellow;
+
+		if (nDrain != 0 || nMax != 0)
+		{
+			const auto nPercentage = nMax == 0 ? 999.99 : (double)nDrain / (double)(nMax);
+			clrToolTip = nPercentage < Phobos::UI::SupplyCounter_ConditionYellow
+				? pSideExt->Sidebar_SupplyCounter_Green : LESS_EQUAL(nPercentage, Phobos::UI::SupplyCounter_ConditionRed)
+				? pSideExt->Sidebar_SupplyCounter_Yellow : pSideExt->Sidebar_SupplyCounter_Red;
+		}
 
 		swprintf_s(counter, L"%ls%d/%d", Phobos::UI::SupplyLabel, nDrain, nMax);
 

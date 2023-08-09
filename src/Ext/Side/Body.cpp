@@ -40,6 +40,7 @@ void SideExt::ExtData::LoadFromINIFile(CCINIClass* pINI)
 	this->ToolTip_Background_BlurSize.Read(exINI, pSection, "ToolTip.Background.BlurSize");
 	this->BriefingTheme = pINI->ReadTheme(pSection, "BriefingTheme", this->BriefingTheme);;
 	this->Sidebar_SupplyCounter_Offset.Read(exINI, pSection, "Sidebar.SupplyCounter.Offset");
+	this->Sidebar_SupplyCounter_Green.Read(exINI, pSection, "Sidebar.SupplyCounter.Green");
 	this->Sidebar_SupplyCounter_Yellow.Read(exINI, pSection, "Sidebar.SupplyCounter.ColorYellow");
 	this->Sidebar_SupplyCounter_Red.Read(exINI, pSection, "Sidebar.SupplyCounter.ColorRed");
 }
@@ -70,6 +71,7 @@ void SideExt::ExtData::Serialize(T& Stm)
 		.Process(this->IngameScore_LoseTheme)
 		.Process(this->BriefingTheme)
 		.Process(this->Sidebar_SupplyCounter_Offset)
+		.Process(this->Sidebar_SupplyCounter_Green)
 		.Process(this->Sidebar_SupplyCounter_Yellow)
 		.Process(this->Sidebar_SupplyCounter_Red)
 		;

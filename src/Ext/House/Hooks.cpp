@@ -260,10 +260,10 @@ DEFINE_HOOK(0x5025F0, HouseClass_RegisterLoss_SuppliedUnits, 0x5)
 	auto pHouseExt = HouseExt::ExtMap.Find(pHouse);
 	auto pTypeExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
 
-	if (pTypeExt->SupplyDrain >= 0)
-		pHouseExt->SupplyMax -= pTypeExt->SupplyDrain;
+	if (pTypeExt->Supply >= 0)
+		pHouseExt->SupplyMax -= pTypeExt->Supply;
 	else
-		pHouseExt->SupplyCurrent -= -pTypeExt->SupplyDrain;
+		pHouseExt->SupplyCurrent -= -pTypeExt->Supply;
 
 	pHouseExt->RecheckSupply();
 
@@ -278,10 +278,10 @@ DEFINE_HOOK(0x502A80, HouseClass_RegisterGain_SuppliedUnits, 0x8)
 	auto pHouseExt = HouseExt::ExtMap.Find(pHouse);
 	auto pTypeExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
 
-	if (pTypeExt->SupplyDrain >= 0)
-		pHouseExt->SupplyMax += pTypeExt->SupplyDrain;
+	if (pTypeExt->Supply >= 0)
+		pHouseExt->SupplyMax += pTypeExt->Supply;
 	else
-		pHouseExt->SupplyCurrent += -pTypeExt->SupplyDrain;
+		pHouseExt->SupplyCurrent += -pTypeExt->Supply;
 
 	pHouseExt->RecheckSupply();
 

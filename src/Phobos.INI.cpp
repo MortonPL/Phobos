@@ -87,6 +87,9 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 
 		pINI_UIMD->ReadString(TOOLTIPS_SECTION, "TimeLabel", NONE_STR, Phobos::readBuffer);
 		Phobos::UI::TimeLabel = GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"\u231a"); // ⌚
+
+		pINI_UIMD->ReadString(TOOLTIPS_SECTION, "SupplyLabel", NONE_STR, Phobos::readBuffer);
+		Phobos::UI::SupplyLabel = GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"\u26fd"); // ⛽
 	}
 
 	// Sidebar
@@ -126,9 +129,6 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 
 		Phobos::UI::SupplyCounter_ConditionRed =
 			pINI_UIMD->ReadDouble(SIDEBAR_SECTION, "SupplyCounter.ConditionRed", Phobos::UI::SupplyCounter_ConditionYellow);
-
-		pINI_UIMD->ReadString(SIDEBAR_SECTION, "SupplyCounter.Label", NONE_STR, Phobos::readBuffer);
-		Phobos::UI::SupplyLabel = GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"\u26fd"); // ⛽
 	}
 
 	CCINIClass::UnloadINIFile(pINI_UIMD);

@@ -122,13 +122,21 @@ void PhobosToolTip::HelpText(TechnoTypeClass* pType)
 	int nMin = tickTimeToSeconds(nBuildTime) / 60 /* % 60*/;
 	// int nHour = tickTimeToSeconds(nBuildTime) / 60 / 60;
 
-	int cost = pType->GetActualCost(HouseClass::CurrentPlayer);
+	const int cost = pType->GetActualCost(HouseClass::CurrentPlayer);
+	const int supply = pData->Supply;
 
 	std::wostringstream oss;
 	oss << pType->UIName << L"\n"
 		<< (cost < 0 ? L"+" : L"")
-		<< Phobos::UI::CostLabel << std::abs(cost) << L" "
-		<< Phobos::UI::TimeLabel
+		<< Phobos::UI::CostLabel << std::abs(cost) << L" ";
+
+	if (supply != 0)
+	{
+		oss << (supply > 0 ? L"+" : L"")
+			<< Phobos::UI::SupplyLabel << std::abs(supply) << L" ";
+	}
+
+	oss << Phobos::UI::TimeLabel
 		// << std::setw(2) << std::setfill(L'0') << nHour << L":"
 		<< std::setw(2) << std::setfill(L'0') << nMin << L":"
 		<< std::setw(2) << std::setfill(L'0') << nSec;

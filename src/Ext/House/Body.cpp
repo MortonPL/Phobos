@@ -501,11 +501,14 @@ void HouseExt::ExtData::RecheckSupply()
 {
 	if (this->SupplyCurrent <= this->SupplyMax)
 	{
-		this->OwnerObject()->BuildTimeMultiplier = 1.0f;
+		this->OwnerObject()->BuildTimeMultiplier = 1.0;
 		return;
 	}
 
-	this->OwnerObject()->BuildTimeMultiplier = 1.0f + std::max(0, this->SupplyCurrent - this->SupplyMax) * RulesExt::Global()->SupplyPenaltyPerUnit;
+	double penalty = ((double)this->SupplyCurrent / std::max((double)this->SupplyMax, 1.0) - 1.0) * RulesExt::Global()->LowSupplyPenaltyModifier;
+	penalty = std::max(penalty, RulesExt::Global()->MinLowSupplyPenalty.Get());
+	penalty = std::min(penalty, RulesExt::Global()->MaxLowSupplyPenalty.Get());
+	this->OwnerObject()->BuildTimeMultiplier = 1.0 + penalty;
 }
 
 // =============================

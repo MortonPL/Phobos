@@ -273,7 +273,7 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	this->SpawnDistanceFromTarget.Read(exINI, pSection, "SpawnDistanceFromTarget");
 	this->SpawnHeight.Read(exINI, pSection, "SpawnHeight");
 
-	this->SupplyDrain.Read(exINI, pSection, "SupplyDrain");
+	this->Supply.Read(exINI, pSection, "Supply");
 	this->SubjectToSupply.Read(exINI, pSection, "SubjectToSupply");
 
 	// Ares 0.2
@@ -573,6 +573,8 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 
 		.Process(this->SpawnDistanceFromTarget)
 		.Process(this->SpawnHeight)
+		.Process(this->Supply)
+		.Process(this->SubjectToSupply)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)

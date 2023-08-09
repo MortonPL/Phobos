@@ -926,20 +926,24 @@ Spawner.DelayFrames=       ; integer, game frames
 (New_Enhanced_Supply)=
 ### Supply system
 
-- Units with non-zero `SupplyDrain` will contribute to the "supply" system of each player.
+- Units with non-zero `Supply` will contribute to the "supply" system of each player.
     - Negative values will increase the "drain" of "supply", while positive values will increase "supply output".
-- When "supply drain" exceeds "supply output", the difference of these values will increase build time of technos with `SubjectToSupply=yes`.
-- Resulting build time penalty can be controlled with `SupplyPenaltyPerUnit`, which specifies the multiplier to build time to apply for each supply unit.
-    - In example: if "supply drain" is 10 and "supply output" is 5 and `SupplyPenaltyPerUnit=0.1`, the resulting penalty is (10-5)*0.1 = +50% build time.
+- When "supply drain" exceeds "supply output", the quotient of these values (`drain / supply - 1`) will increase build time of technos with `SubjectToSupply=yes`.
+  - When "supply output" is 0 and "supply drain" is above 0, "supply output" is treated as 1.
+- Resulting build time penalty can be controlled with `LowSupplyPenaltyModifier`, which specifies the multiplier to build time to apply for supply quotient.
+    - Penalty can be further limited with `MinLowSupplyPenalty` and `MaxLowSupplyPenalty`.
+    - In example: if "supply drain" is 10, "supply output" is 5 and `LowSupplyPenaltyModifier` is 0.5, the resulting penalty is `(10 / 5 - 1) * 0.5 = 0.5`, so 50% build time increase.
 
 In `rulesmd.ini`:
 ```ini
 [General]
-SupplyPenaltyPerUnit=1.0    ; float, 1.0 is 100% build time increase
+LowSupplyPenaltyModifier=1.0    ; float, multiplier to supply quotient
+MinLowSupplyPenalty=0.0         ; float, build time penalty will be at least this high
+MaxLowSupplyPenalty=1.0         ; float, build time penalty will be at most this high
 
 [SOMETECHNO]
-SupplyDrain=0               ; integer
-SubjectToSupply=yes         ; boolean
+Supply=0                        ; integer
+SubjectToSupply=yes             ; boolean
 ```
 
 ### Weapons fired on warping in / out

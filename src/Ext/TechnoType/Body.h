@@ -207,7 +207,7 @@ public:
 		std::vector<std::vector<CoordStruct>> DeployedWeaponBurstFLHs;
 		std::vector<std::vector<CoordStruct>> EliteDeployedWeaponBurstFLHs;
 
-		Valueable<int> SupplyDrain;
+		Valueable<int> Supply;
 		Valueable<bool> SubjectToSupply;
 
 		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
@@ -362,7 +362,7 @@ public:
 
 			, SpawnDistanceFromTarget {}
 			, SpawnHeight {}
-			, SupplyDrain { 0 }
+			, Supply { 0 }
 			, SubjectToSupply { true }
 		{ }
 

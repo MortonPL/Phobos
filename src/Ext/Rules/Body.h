@@ -104,7 +104,9 @@ public:
 
 		Valueable<bool> ShowDesignatorRange;
 		Valueable<bool> IsVoiceCreatedGlobal;
-		Valueable<float> SupplyPenaltyPerUnit;
+		Valueable<double> LowSupplyPenaltyModifier;
+		Valueable<double> MinLowSupplyPenalty;
+		Valueable<double> MaxLowSupplyPenalty;
 
 		ExtData(RulesClass* OwnerObject) : Extension<RulesClass>(OwnerObject)
 			, Storage_TiberiumIndex { -1 }
@@ -171,6 +173,9 @@ public:
 			, Vehicles_DefaultDigitalDisplayTypes {}
 			, Aircraft_DefaultDigitalDisplayTypes {}
 			, ShowDesignatorRange { true }
+			, LowSupplyPenaltyModifier { 1.0f }
+			, MinLowSupplyPenalty { 0.0f }
+			, MaxLowSupplyPenalty { 1.0f }
 		{ }
 
 		virtual ~ExtData() = default;
