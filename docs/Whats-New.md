@@ -303,6 +303,1127 @@ HideLightFlashEffects=false      ; boolean
   ```
 </details>
 
+### For Map Editor (World Altering Editor)
+
+<details>
+  <summary>Click to show</summary>
+
+  In `Events.ini`:
+  ```ini
+[LocalVarGreaterX]
+ID=500
+Name=Local variable is greater than X
+Description=Triggers when local variable is greater than set value.
+P1Type=LocalVariable
+P2Type=Number
+
+[LocalVarLessX]
+ID=501
+Name=Local variable is less than X
+Description=Triggers when local variable is less than set value.
+P1Type=LocalVariable
+P2Type=Number
+
+[LocalVarEqualX]
+ID=502
+Name=Local variable is equal to X
+Description=Triggers when local variable is equal to set value.
+P1Type=LocalVariable
+P2Type=Number
+
+[LocalVarGreaterEqualX]
+ID=503
+Name=Local variable is greater than or equal to X
+Description=Triggers when local variable is greater than or equal to set alue.
+P1Type=LocalVariable
+P2Type=Number
+
+[LocalVarLessEqualX]
+ID=504
+Name=Local variable is less than or equal to X
+Description=Triggers when local variable is less than or equal to set value.
+P1Type=LocalVariable
+P2Type=Number
+
+[LocalVarAndX]
+ID=505
+Name=Local variable and X are true
+Description=Triggers when local variable and set value are true.
+P1Type=LocalVariable
+P2Type=Number
+
+[GlobalVarGreaterX]
+ID=506
+Name=Global variable is greater than X
+Description=Triggers when global variable is greater than set value.
+P1Type=GlobalVariable
+P2Type=Number
+
+[GlobalVarLessX]
+ID=507
+Name=Global variable is less than X
+Description=Triggers when global variable is less than set value.
+P1Type=GlobalVariable
+P2Type=Number
+
+[GlobalVarEqualX]
+ID=508
+Name=Global variable is equal to X
+Description=Triggers when global variable is equal to set value.
+P1Type=GlobalVariable
+P2Type=Number
+
+[GlobalVarGreaterEqualX]
+ID=509
+Name=Global variable is greater than or equal to X
+Description=Triggers when global variable is greater than or equal to setvalue.
+P1Type=GlobalVariable
+P2Type=Number
+
+[GlobalVarLessEqualX]
+ID=510
+Name=Global variable is greater than or less to X
+Description=Triggers when global variable is less than or equal to set value.
+P1Type=GlobalVariable
+P2Type=Number
+
+[GlobalVarAndX]
+ID=511
+Name=Global variable and X are true
+Description=Triggers when global variable and set value are true.
+P1Type=GlobalVariable
+P2Type=Number
+
+[LocalVarGreaterLocal]
+ID=512
+Name=Local variable is greater than local variable
+Description=Triggers when local variable is greater than another localvariable.
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[LocalVarLessLocal]
+ID=513
+Name=Local variable is less than local variable
+Description=Triggers when local variable is less than another local variable.
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[LocalVarEqualLocal]
+ID=514
+Name=Local variable is equal to local variable
+Description=Triggers when local variable is equal to another local variable
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[LocalVarGreaterEqualLocal]
+ID=515
+Name=Local variable is greater than or equal to local variable
+Description=Triggers when local variable is greater than or equal to another local variable.
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[LocalVarLessEqualLocal]
+ID=516
+Name=Local variable is less than or equal to local variable
+Description=Triggers when local variable is less than or equal to another local variable.
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[LocalVarAndLocal]
+ID=517
+Name=Local variable and local variable are true
+Description=Triggers when local variable and another local variable are true.
+P1Type=LocalVariable
+P2Type=LocalVariable
+
+[GlobalVarGreaterLocal]
+ID=518
+Name=Global variable is greater than local variable
+Description=Triggers when global variable is greater than local variable.
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[GlobalVarLessLocal]
+ID=519
+Name=Global variable is less than local variable
+Description=Triggers when global variable is less than local variable.
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[GlobalVarEqualLocal]
+ID=520
+Name=Global variable is equal to local variable
+Description=Triggers when global variable is equal to local variable
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[GlobalVarGreaterEqualLocal]
+ID=521
+Name=Global variable is greater than or equal to local variable
+Description=Triggers when global variable is greater than or equal to local variable.
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[GlobalVarLessEqualLocal]
+ID=522
+Name=Global variable is less than or equal to local variable
+Description=Triggers when global variable is less than or equal to local variable.
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[GlobalVarAndLocal]
+ID=523
+Name=Global variable and local variable are true
+Description=Triggers when global variable and local variable are true.
+P1Type=GlobalVariable
+P2Type=LocalVariable
+
+[LocalVarGreaterGlobal]
+ID=524
+Name=Local variable is greater than global variable
+Description=Triggers when local variable is greater than global variable.
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[LocalVarLessGlobal]
+ID=525
+Name=Local variable is less than global variable
+Description=Triggers when local variable is less than global variable.
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[LocalVarEqualGlobal]
+ID=526
+Name=Local variable is equal to global variable
+Description=Triggers when local variable is equal to global variable
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[LocalVarGreaterEqualGlobal]
+ID=527
+Name=Local variable is greater than or equal to global variable
+Description=Triggers when local variable is greater than or equal to global variable.
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[LocalVarLessEqualGlobal]
+ID=528
+Name=Local variable is less than or equal to global variable
+Description=Triggers when local variable is less than or equal to global variable.
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[LocalVarAndGlobal]
+ID=529
+Name=Local variable and global variable are true
+Description=Triggers when local variable and global variable are true.
+P1Type=LocalVariable
+P2Type=GlobalVariable
+
+[GlobalVarGreaterGlobal]
+ID=530
+Name=Global variable is greater than global variable
+Description=Triggers when global variable is greater than another global variable.
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[GlobalVarLessGlobal]
+ID=531
+Name=Global variable is less than global variable
+Description=Triggers when global variable is less than another global variable.
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[GlobalVarEqualGlobal]
+ID=532
+Name=Global variable is equal to global variable
+Description=Triggers when global variable is equal to another global variable
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[GlobalVarGreaterEqualGlobal]
+ID=533
+Name=Global variable is greater than or equal to global variable
+Description=Triggers when global variable is greater than or equal to another global variable.
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[GlobalVarLessEqualGlobal]
+ID=534
+Name=Global variable is less than or equal to global variable
+Description=Triggers when global variable is less than or equal to another global variable.
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[GlobalVarAndGlobal]
+ID=535
+Name=Global variable and global variable are true
+Description=Triggers when global variable and another global variable are true.
+P1Type=GlobalVariable
+P2Type=GlobalVariable
+
+[ShieldBroken]
+ID=600
+Name=Shield of the attached object is broken
+Description=Triggers when the shield of the attached object is broken.
+  ```
+
+  In `Actions.ini`:
+  ```ini
+[SaveGame]
+ID=500
+Name=Save game
+Description=Save the current game immediately (singleplayer game only).
+P1Type=4
+P2Type=String
+
+[EditVariable]
+ID=501
+Name=Edit variable
+Description=Perform an operation on a variable and constant. Available operations: 0 x = y, 1 x += y, 2 x -= y, 3 x *= y, 4 x /= y, 5 x = x % y, 6 x <<= y, 7 x >>= y, 8 x = ~y, 9 x = x ^ y, 10 x = x || y, 11 x = x && y.
+P2Type=Number
+P2Name=Variable index
+P3Type=Number
+P3Name=Operator
+P4Type=Number
+P5Type=Boolean
+P5Name=Is global?
+
+[RandomNumber]
+ID=502
+Name=Generate a random integer ranged in <Min, Max> and store it in a given variable.
+Description=
+P2Type=Number
+P2Name=Variable index
+P3Type=Number
+P3Name=Min
+P4Type=Number
+P4Name=Max
+P5Type=Boolean
+P5Name=Is global?
+
+[PrintVariable]
+ID=503
+Name=Print variable value
+Description=Print a variable value to the message list.
+P2Type=Number
+P2Name=Variable index
+P3Type=Boolean
+P3Name=Is global?
+
+[BinaryOperation]
+ID=504
+Name=Binary operation on two variables
+Description=Perform a binary operation on two variables. Available operations: 0 x = y, 1 x += y, 2 x -= y, 3 x *= y, 4 x /= y, 5 x = x % y, 6 x <<= y, 7 x >>= y, 8 x = ~y, 9 x = x ^ y, 10 x = x || y, 11 x = x && y.
+P2Type=Number
+P2Name=Variable 1 index
+P3Type=Number
+P3Name=Operator
+P4Type=Number
+P4Name=Variable 2 index
+P5Type=Boolean
+P5Name=Is 1 global?
+P6Type=Boolean
+P6Name=Is 2 global?
+
+[FireSWAtCell]
+ID=505
+Name=Fire Super Weapon at cell
+Description=Launch a Super Weapon from [SuperWeaponTypes] list at a specified location.House=-1 means random target that isn't neutral. House=-2 means the first neutral house. House=-3 means random human target. Coordinate X=-1 means random. Coordinate Y=-1 means random.
+P3Type=SuperWeapon
+P4Type=House
+P5Type=Number
+P5Name=X
+P6Type=Number
+P6Name=Y
+
+[FireSWAtWaypoint]
+ID=506
+Name=Fire Super Weapon at waypoint
+Description=Launch a Super Weapon from [SuperWeaponTypes] list at a specified waypoint. House=-1 means random target that isn't neutral. House=-2 means the first neutral house. House=-3 means random human target. Coordinate X=-1 means random. Coordinate Y=-1 means random
+P3Type=SuperWeapon
+P4Type=House
+P5Type=Waypoint
+
+[ToggleMCVRedeploy]
+ID=510
+Name=Toggle MCV Redeployablility
+Description=Toggle MCV redeployablility.
+P3Type=Boolean
+```
+
+  In `ScriptActions.ini`:
+  ```ini
+[AttackTargetTypeRepeatClosest]
+ID=10000
+Name=Attack Target Type (Repeat) (Closest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackTargetTypeSingleClosest]
+ID=10001
+Name=Attack Target Type (Single) (Closest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackAITargetTypeRepeatClosest]
+ID=10002
+Name=Attack AITargetType (Repeat) (Closest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeSingleClosest]
+ID=10003
+Name=Attack AITargetType (Single) (Closest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeRepeatClosestRandom]
+ID=10004
+Name=Attack AITargetType (Repeat) (Closest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackTargetTypeRepeatFarthest]
+ID=10005
+Name=Attack Target Type (Repeat) (Farthest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackTargetTypeSingleFarthest]
+ID=10006
+Name=Attack Target Type (Single) (Farthest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackAITargetTypeRepeatFarthest]
+ID=10007
+Name=Attack AITargetType (Repeat) (Farthest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeSingleFarthest]
+ID=10008
+Name=Attack AITargetType (Single) (Farthest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeRepeatFarthestRandom]
+ID=10009
+Name=Attack AITargetType (Repeat) (Farthest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackTargetTypeRepeatClosestThreat]
+ID=10010
+Name=Attack Target Type (Repeat) (Closest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackTargetTypeSingleClosestThreat]
+ID=10011
+Name=Attack Target Type (Single) (Closest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackAITargetTypeRepeatClosestThreat]
+ID=10012
+Name=Attack AITargetType (Repeat) (Closest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeSingleClosestThreat]
+ID=10013
+Name=Attack AITargetType (Single) (Closest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackTargetTypeRepeatFarthestThreat]
+ID=10014
+Name=Attack Target Type (Repeat) (Farthest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackTargetTypeSingleFarthestThreat]
+ID=10015
+Name=Attack Target Type (Single) (Farthest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[AttackAITargetTypeRepeatFarthestThreat]
+ID=10016
+Name=Attack AITargetType (Repeat) (Farthest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[AttackAITargetTypeSingleThreat]
+ID=10017
+Name=Attack AITargetType (Single) (Farthest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToTargetTypeEnemyClosestThreat]
+ID=10050
+Name=Move to Enemy Target Type (Closest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[MoveToAITargetTypeEnemyClosestThreat]
+ID=10051
+Name=Move to Enemy AITargetType (Closest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToAITargetTypeEnemyClosestRandom]
+ID=10052
+Name=Move to Enemy AITargetType (Closest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToTargetTypeFriendlyClosest]
+ID=10053
+Name=Move to Friendly Target Type (Closest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[MoveToAITargetTypeFriendlyClosest]
+ID=10054
+Name=Move to Friendly AITargetType (Closest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToAITargetTypeFriendlyClosestRandom]
+ID=10055
+Name=Move to Friendly AITargetType (Closest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToTargetTypeEnemyFarthestThreat]
+ID=10056
+Name=Move to Enemy Target Type (Farthest Threat)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[MoveToAITargetTypeEnemyFarthestThreat]
+ID=10057
+Name=Move to Enemy AITargetType (Farthest Threat)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToAITargetTypeEnemyFarthestRandom]
+ID=10058
+Name=Move to Enemy AITargetType (Farthest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToTargetTypeFriendlyFarthest]
+ID=10059
+Name=Move to Friendly Target Type (Farthest)
+Description=
+ParamDescription=Target Type
+ParamType=Number
+Option0=0,N/A (Cancel)
+Option1=1,Anything
+Option2=2,Structures
+Option3=3,Ore Miners
+Option4=4,Infantry
+Option5=5,Vehicles
+Option6=6,Factories
+Option7=7,Base Defenses
+Option8=8,House Threats
+Option9=9,Power Plants
+Option10=10,Occupied
+Option11=11,Tech Buildings
+Option12=12,Refinery
+Option13=13,Mind Controller
+Option14=14,Air Units
+Option15=15,Naval
+Option16=16,Disruptors
+Option17=17,Ground Vehicles
+Option18=18,Economy
+Option19=19,Infantry Factory
+Option20=20,Vehicle Factory
+Option21=21,Aircraft Factory
+Option22=22,Radar
+Option23=23,Tech Lab
+Option24=24,Naval Factory
+Option25=25,Super Weapon
+Option26=26,Construction Yard
+Option27=27,Neutrals
+Option28=28,Generators
+Option29=29,Radar Jammer
+Option30=30,Inhibitors
+Option31=31,Naval Units
+Option32=32,Mobile Units
+Option33=33,Capturable
+Option34=34,Area Threats
+Option35=35,Vehicle & Naval Factory
+Option36=36,Non-Defensive Structures
+
+[MoveToAITargetTypeFriendlyFarthest]
+ID=10060
+Name=Move to Friendly AITargetType (Farthest)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[MoveToAITargetTypeFriendlyFarthestRandom]
+ID=10061
+Name=Move to Friendly AITargetType (Farthest) (Random)
+Description=
+ParamDescription=AITargetType#
+ParamType=Number
+
+[TimedAreaGuard]
+ID=10100
+Name=Timed Area Guard
+Description=
+ParamDescription=Seconds
+ParamType=Number
+
+[WaitUntilFullAmmo]
+ID=10101
+Name=Wait Until Ammo Is Full
+Description=
+
+[RegroupTimedAroundLeader]
+ID=10102
+Name=Regroup Timed Around the Team Leader
+Description=
+ParamDescription=Seconds
+ParamType=Number
+
+[LoadOntoTransport]
+ID=10103
+Name=Load onto Transports
+Description=
+
+[ChronoshiftToEnemyBase]
+ID=10104
+Name=Chronoshift to Enemy Base
+Description=
+ParamDescription=Distance
+ParamType=Number
+
+[WaitIfNoTargetFound]
+ID=12000
+Name=Wait if No Target Found
+Description=
+ParamDescription=Retries
+ParamType=Number
+
+[ModifyTargetDistance]
+ID=12001
+Name=Modify Target Distance
+Description=
+ParamDescription=Distance
+ParamType=Number
+
+[SetMoveActionEndMode]
+ID=12002
+Name=Set Move Action End Mode
+Description=
+ParamDescription=Mode
+ParamType=Number
+Option0=0,Leader reaches minimum distance
+Option1=1,Anyone reaches minimum distance
+Option2=2,All reach minimum distance
+
+[AITriggerWeightReward]
+ID=14000
+Name=Team's AITrigger Weight Reward
+Description=
+ParamDescription=Weight Points
+ParamType=Number
+
+[IncreaseAITriggerWeight]
+ID=14001
+Name=Increase Team's AITrigger Weight
+Description=
+ParamDescription=Weight Points
+ParamType=Number
+
+[DecreaseAITriggerWeight]
+ID=14002
+Name=Decrease Team's AITrigger Weight
+Description=
+ParamDescription=Weight Points
+ParamType=Number
+
+[UnregisterSuccess]
+ID=14003
+Name=Unregister Team Success
+Description=
+
+[TimedJumpToSameLine]
+ID=16000
+Name=Timed Jump To Same Line
+Description=
+ParamDescription=Seconds
+ParamType=Number
+
+[TimedJumpToNextLine]
+ID=16001
+Name=Timed Jump To Next Line
+Description=
+ParamDescription=Seconds
+ParamType=Number
+
+[StopTimedJumps]
+ID=16002
+Name=Stop Timed Jumps
+Description=
+
+[RandomlySkipNextAction]
+ID=16003
+Name=Randomly Skip Next Action
+Description=
+ParamDescription=Chance %
+ParamType=Number
+
+[PickRandomScript]
+ID=16004
+Name=Pick a Random Script
+Description=
+ParamDescription=AIScriptsList#
+ParamType=Number
+  ```
+</details>
+
 ## Changelog
 
 ### Version TBD (develop branch nightly builds)
