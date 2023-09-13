@@ -24,6 +24,8 @@ bool Phobos::IsLoadingSaveGame = false;
 
 #ifdef STR_GIT_COMMIT
 const wchar_t* Phobos::VersionDescription = L"Phobos nightly build (" STR_GIT_COMMIT L" @ " STR_GIT_BRANCH L"). DO NOT SHIP IN MODS!";
+#elif defined(IS_AA)
+const wchar_t* Phobos::VersionDescription = L"Assault Amerika 1.0 \"WASHINGTON\" running Phobos " FILE_VERSION_STR L"-AA.";
 #elif !defined(IS_RELEASE_VER)
 const wchar_t* Phobos::VersionDescription = L"Phobos development build #" _STR(BUILD_NUMBER) L". Please test the build before shipping.";
 #else
