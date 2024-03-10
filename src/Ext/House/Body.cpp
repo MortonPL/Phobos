@@ -579,6 +579,37 @@ float HouseExt::ExtData::GetRestrictedFactoryPlantMult(TechnoTypeClass* pTechnoT
 	return 1.0f - ((1.0f - mult) * pTechnoTypeExt->FactoryPlant_Multiplier);
 }
 
+void HouseExt::ExtData::GiveResources(const std::vector<int>& resources)
+{
+	if (Resources.size() < resources.size())
+		Resources.resize(resources.size());
+	for (size_t i = 0; i < resources.size(); i++)
+		Resources[i] += resources[i];
+}
+
+void HouseExt::ExtData::TakeResources(const std::vector<int>& resources)
+{
+	if (Resources.size() < resources.size())
+		Resources.resize(resources.size());
+	for (size_t i = 0; i < resources.size(); i++)
+		Resources[i] -= resources[i];
+}
+
+void HouseExt::ExtData::RefundTechno(TechnoClass* pTechno)
+{
+	const auto pTypeExt = TechnoTypeExt::ExtMap.Find(pTechno->GetTechnoType());
+	if (!pTypeExt)
+		return;
+
+	this->RefundTechno(pTechno, *pTypeExt);
+}
+
+void HouseExt::ExtData::RefundTechno(TechnoClass* pTechno, TechnoTypeExt::ExtData& pTypeExt)
+{
+	const auto resources = pTypeExt.GetRefundResources(pTechno->Owner);
+	this->GiveResources(resources);
+}
+
 void HouseExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 {
 	const char* pSection = this->OwnerObject()->PlainName;
@@ -629,6 +660,7 @@ void HouseExt::ExtData::Serialize(T& Stm)
 		.Process(this->AIFireSaleDelayTimer)
 		.Process(this->SuspendedEMPulseSWs)
 		.Process(this->SuperExts)
+		.Process(this->Resources)
 		;
 }
 

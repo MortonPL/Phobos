@@ -617,6 +617,36 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 	if (GeneralUtils::IsValidString(pThis->PaletteFile) && !pThis->Palette)
 		Debug::Log("[Developer warning] [%s] has Palette=%s set but no palette file was loaded (missing file or wrong filename). Missing palettes cause issues with lighting recalculations.\n", pArtSection, pThis->PaletteFile);
+
+	this->Cost_Extra.Read(exINI, pSection, "Cost.Extra");
+	this->Soylent_Extra.Read(exINI, pSection, "Soylent.Extra");
+}
+
+std::vector<int> TechnoTypeExt::ExtData::GetRefundResources(HouseClass* pOwner)
+{
+	RulesClass::Instance->RefundPercent;
+
+	bool isSoylentSet = false;
+	for (auto x: this->Soylent_Extra)
+		isSoylentSet |= x != 0;
+
+	double typeMultiplier = pOwner->GetTypeCostMultiplier(this->OwnerObject());
+	double countryMultiplier = pOwner->GetCountryCostMultiplier(this->OwnerObject());
+
+	if (isSoylentSet)
+	{
+		std::vector<int> result = this->Soylent_Extra;
+		for (int &x: this->Soylent_Extra)
+			x = (int)(x * typeMultiplier);
+
+		return result;
+	}
+
+	std::vector<int> result = this->Cost_Extra;
+	for (int& x : this->Cost_Extra)
+		x = (int)(x * countryMultiplier * typeMultiplier);
+
+	return result;
 }
 
 template <typename T>
@@ -828,6 +858,8 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->Wake)
 		.Process(this->Wake_Grapple)
 		.Process(this->Wake_Sinking)
+		.Process(this->Cost_Extra)
+		.Process(this->Soylent_Extra)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)

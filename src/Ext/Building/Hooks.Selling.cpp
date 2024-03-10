@@ -1,4 +1,5 @@
 #include "Body.h"
+#include "Ext/House/Body.h"
 
 // SellSound and EVA dehardcode
 DEFINE_HOOK(0x4D9F7B, FootClass_Sell, 0x6)
@@ -9,9 +10,12 @@ DEFINE_HOOK(0x4D9F7B, FootClass_Sell, 0x6)
 	int money = pThis->GetRefund();
 	pThis->Owner->GiveMoney(money);
 
+	const auto pTypeExt = TechnoTypeExt::ExtMap.Find(pThis->GetTechnoType());
+	auto pOwnerExt = HouseExt::ExtMap.Find(pThis->Owner);
+	pOwnerExt->RefundTechno(pThis, *pTypeExt);
+
 	if (pThis->Owner->IsControlledByCurrentPlayer())
 	{
-		const auto pTypeExt = TechnoTypeExt::ExtMap.Find(pThis->GetTechnoType());
 		VoxClass::PlayIndex(pTypeExt->EVA_Sold.Get(VoxClass::FindIndex(GameStrings::EVA_UnitSold)));
 		//WW used VocClass::PlayGlobal to play the SellSound, why did they do that?
 		VocClass::PlayAt(pTypeExt->SellSound.Get(RulesClass::Instance->SellSound), pThis->Location);

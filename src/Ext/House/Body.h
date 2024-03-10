@@ -62,6 +62,8 @@ public:
 		};
 		std::vector<SWExt> SuperExts;
 
+		std::vector<int> Resources;
+
 		ExtData(HouseClass* OwnerObject) : Extension<HouseClass>(OwnerObject)
 			, PowerPlantEnhancers {}
 			, OwnedLimboDeliveredBuildings {}
@@ -87,6 +89,7 @@ public:
 			, AIFireSaleDelayTimer {}
 			, SuspendedEMPulseSWs {}
 			, SuperExts(SuperWeaponTypeClass::Array->Count)
+			, Resources {}
 		{ }
 
 		bool OwnsLimboDeliveredBuilding(BuildingClass* pBuilding);
@@ -96,6 +99,11 @@ public:
 		void UpdateNonMFBFactoryCounts(AbstractType rtti, bool remove, bool isNaval);
 		int GetFactoryCountWithoutNonMFB(AbstractType rtti, bool isNaval);
 		float GetRestrictedFactoryPlantMult(TechnoTypeClass* pTechnoType) const;
+
+		void GiveResources(const std::vector<int>& resources);
+		void TakeResources(const std::vector<int>& resources);
+		void RefundTechno(TechnoClass* pTechno);
+		void RefundTechno(TechnoClass* pTechno, TechnoTypeExt::ExtData& pTypeExt);
 
 		virtual ~ExtData() = default;
 

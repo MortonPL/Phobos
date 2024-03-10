@@ -515,3 +515,16 @@ DEFINE_HOOK(0x6F4D1A, TechnoClass_ReceiveCommand_Repair, 0x5)
 }
 
 #pragma endregion
+
+DEFINE_HOOK_AGAIN(0x44AAE8, BuildingClass_MissionDeconstruction_Refund, 0x6)
+DEFINE_HOOK_AGAIN(0x44A21B, BuildingClass_MissionDeconstruction_Refund, 0x6)
+DEFINE_HOOK_AGAIN(0x44A1A9, BuildingClass_MissionDeconstruction_Refund, 0x6)
+DEFINE_HOOK(0x44A16F, BuildingClass_MissionDeconstruction_Refund, 0x6)
+{
+	GET(TechnoClass*, pThis, EBP);
+
+	auto pOwnerExt = HouseExt::ExtMap.Find(pThis->Owner);
+	pOwnerExt->RefundTechno(pThis);
+
+	return 0;
+}

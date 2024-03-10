@@ -249,6 +249,8 @@ public:
 		std::vector<std::vector<CoordStruct>> DeployedWeaponBurstFLHs;
 		std::vector<std::vector<CoordStruct>> EliteDeployedWeaponBurstFLHs;
 
+		ValueableVector<int> Cost_Extra;
+		ValueableVector<int> Soylent_Extra;
 
 		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
 			, HealthBar_Hide { false }
@@ -464,6 +466,8 @@ public:
 		virtual void SaveToStream(PhobosStreamWriter& Stm) override;
 
 		void ApplyTurretOffset(Matrix3D* mtx, double factor = 1.0);
+
+		std::vector<int> GetRefundResources(HouseClass* pOwner);
 
 		// Ares 0.A
 		const char* GetSelectionGroupID() const;
