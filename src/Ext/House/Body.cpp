@@ -581,16 +581,12 @@ float HouseExt::ExtData::GetRestrictedFactoryPlantMult(TechnoTypeClass* pTechnoT
 
 void HouseExt::ExtData::GiveResources(const std::vector<int>& resources)
 {
-	if (Resources.size() < resources.size())
-		Resources.resize(resources.size());
 	for (size_t i = 0; i < resources.size(); i++)
 		Resources[i] += resources[i];
 }
 
 void HouseExt::ExtData::TakeResources(const std::vector<int>& resources)
 {
-	if (Resources.size() < resources.size())
-		Resources.resize(resources.size());
 	for (size_t i = 0; i < resources.size(); i++)
 		Resources[i] -= resources[i];
 }

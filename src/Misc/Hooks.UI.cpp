@@ -162,6 +162,27 @@ DEFINE_HOOK(0x4A25E0, CreditsClass_GraphicLogic_HarvesterCounter, 0x7)
 			TextPrintType::UseGradPal | TextPrintType::Center | TextPrintType::Metal12);
 	}
 
+	if (Phobos::UI::ShowResourceCounters)
+	{
+		auto pSideExt = SideExt::ExtMap.Find(SideClass::Array->GetItem(pPlayer->SideIndex));
+		auto pPlayerExt = HouseExt::ExtMap.Find(pPlayer);
+		wchar_t counter[0x20];
+
+		for (size_t i = 0; i < Phobos::Config::NumberOfResources; i++)
+		{
+			Point2D vPos = {
+				DSurface::Sidebar->GetWidth() / 2 + pSideExt->Sidebar_ResourceCounters_Offset[i].X,
+				2 + pSideExt->Sidebar_ResourceCounters_Offset[i].Y
+			};
+
+			swprintf_s(counter, L"%ls%d", Phobos::UI::ResourceLabels[i], pPlayerExt->Resources[i]);
+
+			auto const TextFlags = static_cast<TextPrintType>(TextPrintType::UseGradPal | TextPrintType::Metal12 | TextPrintType::Center);
+
+			DSurface::Sidebar->DrawText(counter, &vRect, &vPos, Drawing::RGB_To_Int(pSideExt->Sidebar_ResourceCounters_Color[i]), 0, TextFlags);
+		}
+	}
+
 	return 0;
 }
 

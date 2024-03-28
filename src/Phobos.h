@@ -1,6 +1,7 @@
 #pragma once
 #include <Phobos.version.h>
 #include <Windows.h>
+#include <vector>
 
 #include <string>
 
@@ -55,6 +56,7 @@ public:
 		static bool CenterPauseMenuBackground;
 		static bool WeedsCounter_Show;
 		static bool AnchoredToolTips;
+		static bool ShowResourceCounters;
 
 		static const wchar_t* CostLabel;
 		static const wchar_t* PowerLabel;
@@ -64,6 +66,7 @@ public:
 		static const wchar_t* ShowBriefingResumeButtonLabel;
 		static const wchar_t* SWShotsFormat;
 		static char ShowBriefingResumeButtonStatusLabel[0x20];
+		static std::vector<const wchar_t*> ResourceLabels;
 	};
 
 	class Config
@@ -90,6 +93,7 @@ public:
 		static bool ShowWeedsCounter;
 		static bool ShowPlanningPath;
 		static bool HideLightFlashEffects;
+		static size_t NumberOfResources;
 	};
 
 	class Misc

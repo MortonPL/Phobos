@@ -90,7 +90,9 @@ public:
 			, SuspendedEMPulseSWs {}
 			, SuperExts(SuperWeaponTypeClass::Array->Count)
 			, Resources {}
-		{ }
+		{
+			this->Resources.resize(Phobos::Config::NumberOfResources);
+		}
 
 		bool OwnsLimboDeliveredBuilding(BuildingClass* pBuilding);
 		void AddToLimboTracking(TechnoTypeClass* pTechnoType);

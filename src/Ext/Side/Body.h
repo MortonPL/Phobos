@@ -36,6 +36,8 @@ public:
 		Nullable<int> ToolTip_Background_Opacity;
 		Nullable<float> ToolTip_Background_BlurSize;
 		Valueable<int> BriefingTheme;
+		std::vector<ColorStruct> Sidebar_ResourceCounters_Color;
+		std::vector<Point2D> Sidebar_ResourceCounters_Offset;
 
 		ExtData(SideClass* OwnerObject) : Extension<SideClass>(OwnerObject)
 			, ArrayIndex { -1 }
@@ -58,6 +60,8 @@ public:
 			, ToolTip_Background_Opacity { }
 			, ToolTip_Background_BlurSize { }
 			, BriefingTheme { -1 }
+			, Sidebar_ResourceCounters_Color { }
+			, Sidebar_ResourceCounters_Offset { }
 		{ }
 
 		virtual ~ExtData() = default;

@@ -27,6 +27,7 @@ const wchar_t* Phobos::UI::TimeLabel = L"";
 const wchar_t* Phobos::UI::HarvesterLabel = L"";
 const wchar_t* Phobos::UI::ShowBriefingResumeButtonLabel = L"";
 const wchar_t* Phobos::UI::SWShotsFormat = L"";
+std::vector<const wchar_t*> Phobos::UI::ResourceLabels;
 char Phobos::UI::ShowBriefingResumeButtonStatusLabel[32];
 bool Phobos::UI::PowerDelta_Show = false;
 double Phobos::UI::PowerDelta_ConditionYellow = 0.75;
@@ -34,6 +35,7 @@ double Phobos::UI::PowerDelta_ConditionRed = 1.0;
 bool Phobos::UI::CenterPauseMenuBackground = false;
 bool Phobos::UI::WeedsCounter_Show = false;
 bool Phobos::UI::AnchoredToolTips = false;
+bool Phobos::UI::ShowResourceCounters = false;
 
 bool Phobos::Config::ToolTipDescriptions = true;
 bool Phobos::Config::ToolTipBlur = false;
@@ -55,6 +57,7 @@ bool Phobos::Config::ShowHarvesterCounter = false;
 bool Phobos::Config::ShowPowerDelta = true;
 bool Phobos::Config::ShowWeedsCounter = false;
 bool Phobos::Config::HideLightFlashEffects = true;
+size_t Phobos::Config::NumberOfResources = 0;
 
 bool Phobos::Misc::CustomGS = false;
 int Phobos::Misc::CustomGS_ChangeInterval[7] = { -1, -1, -1, -1, -1, -1, -1 };
@@ -92,6 +95,10 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 	}
 
 	Phobos::Config::ShowDesignatorRange = CCINIClass::INI_RA2MD->ReadBool("Phobos", "ShowDesignatorRange", false);
+
+	Phobos::Config::NumberOfResources = pINI_RULESMD->ReadInteger(GameStrings::General, "NumberOfResources", 0);
+	if (Phobos::Config::NumberOfResources < 0)
+		Phobos::Config::NumberOfResources = 0;
 
 	CCINIClass ini_uimd {};
 	ini_uimd.LoadFromFile(GameStrings::UIMD_INI);
@@ -159,7 +166,17 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 			ini_uimd.ReadDouble(SIDEBAR_SECTION, "PowerDelta.ConditionRed", Phobos::UI::PowerDelta_ConditionRed);
 
 		Phobos::UI::CenterPauseMenuBackground =
-			ini_uimd.ReadBool(SIDEBAR_SECTION, "CenterPauseMenuBackground", Phobos::UI::CenterPauseMenuBackground);
+			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "CenterPauseMenuBackground", Phobos::UI::CenterPauseMenuBackground);
+
+		Phobos::UI::ShowResourceCounters =
+			pINI_UIMD->ReadBool(SIDEBAR_SECTION, "ResourceCounters.Show", Phobos::UI::ShowResourceCounters);
+
+		for (size_t i = 0; i < Phobos::Config::NumberOfResources; i++)
+		{
+			_snprintf_s(tempBuffer, sizeof(tempBuffer), "ResourceCounters.Label%u", i);
+			pINI_UIMD->ReadString(SIDEBAR_SECTION, tempBuffer, NONE_STR, Phobos::readBuffer);
+			Phobos::UI::ResourceLabels.push_back(GeneralUtils::LoadStringOrDefault(Phobos::readBuffer, L"$"));
+		}
 	}
 
 	// UISettings

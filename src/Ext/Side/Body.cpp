@@ -42,6 +42,22 @@ void SideExt::ExtData::LoadFromINIFile(CCINIClass* pINI)
 	this->ToolTip_Background_Opacity.Read(exINI, pSection, "ToolTip.Background.Opacity");
 	this->ToolTip_Background_BlurSize.Read(exINI, pSection, "ToolTip.Background.BlurSize");
 	this->BriefingTheme = pINI->ReadTheme(pSection, "BriefingTheme", this->BriefingTheme);
+
+	char tempBuffer[40];
+	for (size_t i = 0; i < Phobos::Config::NumberOfResources; i++)
+	{
+		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Sidebar.ResourceCounters.Color%u", i);
+		Valueable<ColorStruct> temp;
+		temp.Read(exINI, pSection, tempBuffer);
+		this->Sidebar_ResourceCounters_Color.push_back(temp.Get());
+	}
+	for (size_t i = 0; i < Phobos::Config::NumberOfResources; i++)
+	{
+		_snprintf_s(tempBuffer, sizeof(tempBuffer), "Sidebar.ResourceCounters.Offset%u", i);
+		Valueable<Point2D> temp;
+		temp.Read(exINI, pSection, tempBuffer);
+		this->Sidebar_ResourceCounters_Offset.push_back(temp.Get());
+	}
 }
 
 // =============================
@@ -71,6 +87,8 @@ void SideExt::ExtData::Serialize(T& Stm)
 		.Process(this->IngameScore_WinTheme)
 		.Process(this->IngameScore_LoseTheme)
 		.Process(this->BriefingTheme)
+		.Process(this->Sidebar_ResourceCounters_Color)
+		.Process(this->Sidebar_ResourceCounters_Offset)
 		;
 }
 
