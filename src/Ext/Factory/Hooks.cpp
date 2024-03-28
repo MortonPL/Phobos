@@ -19,8 +19,12 @@ DEFINE_HOOK(0x4C9DE7, FactoryClass_Set, 0x6)
 
 	auto pExt = FactoryExt::ExtMap.Find(pThis);
 	auto pType = TechnoTypeExt::ExtMap.Find(pThis->Object->GetTechnoType());
+	auto pOwnerExt = HouseExt::ExtMap.Find(pThis->Owner);
 	pExt->BalanceResources = pType->Cost_Extra;
 	pExt->AccumulatedResources.resize(pExt->BalanceResources.size());
+
+	if (pType->Cost_Extra.size() > pOwnerExt->Resources.size())
+		pOwnerExt->Resources.resize(pType->Cost_Extra.size());
 
 	return 0;
 }

@@ -4,6 +4,7 @@
 #include <Ext/Scenario/Body.h>
 #include "Ext/Techno/Body.h"
 #include "Ext/Building/Body.h"
+#include "Ext/Tiberium/Body.h"
 #include <unordered_map>
 
 DEFINE_HOOK(0x508C30, HouseClass_UpdatePower_UpdateCounter, 0x5)
@@ -368,4 +369,24 @@ DEFINE_HOOK(0x4FD8F7, HouseClass_UpdateAI_OnLastLegs, 0x10)
 	}
 
 	return ret;
+}
+
+// Hook just before Ares hooks for HouseClass_Harvested_Ore
+DEFINE_HOOK(0x73E474, UnitClass_MissionUnload_Resources, 0x6)
+{
+	GET(HouseClass*, pThis, EBX);
+	GET(int, tiberiumIndex, EBP);
+	GET_STACK(float, amount, STACK_OFFSET(0x84, -0x68));
+
+	auto pTiberium = TiberiumClass::Array->GetItem(tiberiumIndex);
+	auto pTiberiumExt = TiberiumExt::ExtMap.Find(pTiberium);
+	auto pHouseExt = HouseExt::ExtMap.Find(pThis);
+
+	auto resources = pTiberiumExt->Value_Extra;
+	for (auto& x : resources)
+		x = (int)((float)x * amount);
+
+	pHouseExt->GiveResources(resources);
+
+	return 0;
 }

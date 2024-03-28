@@ -19,9 +19,11 @@ public:
 	{
 	public:
 		Nullable<ColorStruct> MinimapColor;
+		ValueableVector<int> Value_Extra;
 
 		ExtData(TiberiumClass* OwnerObject) : Extension<TiberiumClass>(OwnerObject)
 			, MinimapColor {}
+			, Value_Extra {}
 		{ }
 
 		virtual ~ExtData() = default;

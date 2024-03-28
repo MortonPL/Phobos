@@ -10,6 +10,7 @@ void TiberiumExt::ExtData::Serialize(T& Stm)
 {
 	Stm
 		.Process(this->MinimapColor)
+		.Process(this->Value_Extra)
 		;
 }
 
@@ -24,6 +25,7 @@ void TiberiumExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 	INI_EX exINI(pINI);
 
 	this->MinimapColor.Read(exINI, pSection, "MinimapColor");
+	this->Value_Extra.Read(exINI, pSection, "Value.Extra");
 }
 
 void TiberiumExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
