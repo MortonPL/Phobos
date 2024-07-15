@@ -1,6 +1,5 @@
 #include "Body.h"
 
-template<> const DWORD Extension<CellClass>::Canary = 0xFDC49191;
 CellExt::ExtContainer CellExt::ExtMap;
 
 // =============================
@@ -43,7 +42,7 @@ DEFINE_HOOK(0x47BBF0, CellClass_CTOR, 0x6)
 {
 	GET(CellClass*, pItem, ECX);
 
-	CellExt::ExtMap.FindOrAllocate(pItem);
+	CellExt::ExtMap.TryAllocate(pItem);
 
 	return 0;
 }

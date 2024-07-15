@@ -108,12 +108,12 @@ FoggedObject::FoggedObject(TerrainClass* pTerrain) noexcept
 	TerrainData.Frame = 0;
 	if (TerrainData.Type->IsAnimated)
 		TerrainData.Frame = pTerrain->Animation.Value;
-	else if (pTerrain->TimeToDie)
+	else if (pTerrain->IsCrumbling)
 		TerrainData.Frame = pTerrain->Animation.Value + 1;
 	else if (pTerrain->Health < 2)
 		TerrainData.Frame = 2;
 
-	TerrainData.Flat = TerrainData.Type->IsAnimated || pTerrain->TimeToDie;
+	TerrainData.Flat = TerrainData.Type->IsAnimated || pTerrain->IsCrumbling;
 
 	FoggedObjects.AddItem(this);
 }
@@ -141,8 +141,7 @@ FoggedObject::FoggedObject(CellClass* pCell, bool IsOverlay) noexcept
 		CoveredType = CoveredType::Smudge;
 
 		Location.Z = pCell->Level * Unsorted::LevelHeight;
-		Point2D position;
-		TacticalClass::Instance->CoordsToClient(Location, &position);
+		auto [position, visible] = TacticalClass::Instance->CoordsToClient(Location);
 
 		Bound = RectangleStruct
 		{
@@ -267,8 +266,7 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 	auto pScheme = ColorScheme::Array->GetItem(BuildingData.Owner->ColorSchemeIndex);
 	auto pSHP = pType->GetImage();
 	CoordStruct coord = { Location.X - 128,Location.Y - 128,Location.Z };
-	Point2D point;
-	TacticalClass::Instance->CoordsToClient(coord, &point);
+	auto [point, visible] = TacticalClass::Instance->CoordsToClient(coord);
 	point.X += DSurface::ViewBounds->X - viewRect.X;
 	point.Y += DSurface::ViewBounds->Y - viewRect.Y;
 
@@ -334,14 +332,14 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 			pVXLDrawer->Location = Location;
 			pVXLDrawer->TurretAnimFrame = BuildingData.TurretAnimFrame;
 
-			auto const primaryDir = BuildingData.PrimaryFacing.current();
+			auto primaryDir = BuildingData.PrimaryFacing.Current();
 			int turretFacing = 0;
 			int barrelFacing = 0;
 			if (pType->TurretVoxel.HVA)
 				turretFacing = BuildingData.TurretAnimFrame % pType->TurretVoxel.HVA->FrameCount;
 			if (pType->BarrelVoxel.HVA)
 				barrelFacing = BuildingData.TurretAnimFrame % pType->BarrelVoxel.HVA->FrameCount;
-			int val32 = primaryDir.value32();
+			int val32 = primaryDir.GetValue<5>();
 			int turretExtra = ((unsigned char)turretFacing << 16) | val32;
 			int barrelExtra = ((unsigned char)barrelFacing << 16) | val32;
 
@@ -349,7 +347,7 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 			{
 				Matrix3D matrixturret;
 				matrixturret.MakeIdentity();
-				matrixturret.RotateZ(static_cast<float>(primaryDir.get_radian()));
+				matrixturret.RotateZ(static_cast<float>(primaryDir.GetRadian<1>()));
 				TechnoTypeExt::ApplyTurretOffset(pType, &matrixturret, 0.125);
 
 				Vector3D<float> negativevector = { -matrixturret.Row[0].W ,-matrixturret.Row[1].W,-matrixturret.Row[2].W };
@@ -360,7 +358,7 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 					matrixturret.TranslateX(-BuildingData.TurretRecoil.TravelSoFar);
 					turretExtra = -1;
 				}
-				Matrix3D::MatrixMultiply(&matrixturret, &Matrix3D::VoxelDefaultMatrix, &matrixturret);
+				Matrix3D::__MatrixMultiply(&matrixturret, &Matrix3D::VoxelDefaultMatrix, &matrixturret);
 
 				bool bDrawBarrel = pType->BarrelVoxel.VXL && pType->BarrelVoxel.HVA;
 				if (bDrawBarrel)
@@ -371,9 +369,9 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 						matrixbarrel.TranslateX(-BuildingData.BarrelRecoil.TravelSoFar);
 						barrelExtra = -1;
 					}
-					matrixbarrel.RotateY(-static_cast<float>(BuildingData.BarrelFacing.current().get_radian()));
+					matrixbarrel.RotateY(-static_cast<float>(BuildingData.BarrelFacing.Current().GetRadian<1>()));
 					matrixbarrel.Translate(vector);
-					Matrix3D::MatrixMultiply(&matrixbarrel, &Matrix3D::VoxelDefaultMatrix, &matrixbarrel);
+					Matrix3D::__MatrixMultiply(&matrixbarrel, &Matrix3D::VoxelDefaultMatrix, &matrixbarrel);
 				}
 
 				int facetype = (((((*(unsigned int*)&primaryDir) >> 13) + 1) >> 1) & 3);
@@ -381,22 +379,22 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 				{
 					if (bDrawBarrel)
 						pVXLDrawer->DrawVoxel(BuildingData.Type->BarrelVoxel, 0, (short)turretExtra,
-							BuildingData.Type->VoxelCaches[3], viewRect, turretPoint, matrixbarrel,
+							(IndexClass<int, int>&)(BuildingData.Type->VoxelTurretBarrelCache), viewRect, turretPoint, matrixbarrel,
 							pCell->Intensity_Normal, 0, 0);
 
 					pVXLDrawer->DrawVoxel(BuildingData.Type->TurretVoxel, turretFacing, (short)turretExtra,
-						BuildingData.Type->VoxelCaches[1], viewRect, turretPoint, matrixturret,
+						(IndexClass<int, int>&)(BuildingData.Type->VoxelTurretWeaponCache), viewRect, turretPoint, matrixturret,
 						pCell->Intensity_Normal, 0, 0);
 				}
 				else
 				{
 					pVXLDrawer->DrawVoxel(BuildingData.Type->TurretVoxel, turretFacing, (short)turretExtra,
-						BuildingData.Type->VoxelCaches[1], viewRect, turretPoint, matrixturret,
+						(IndexClass<int, int>&)(BuildingData.Type->VoxelTurretWeaponCache), viewRect, turretPoint, matrixturret,
 						pCell->Intensity_Normal, 0, 0);
 
 					if (bDrawBarrel)
 						pVXLDrawer->DrawVoxel(BuildingData.Type->BarrelVoxel, 0, (short)turretExtra,
-							BuildingData.Type->VoxelCaches[3], viewRect, turretPoint, matrixbarrel,
+							(IndexClass<int, int>&)(BuildingData.Type->VoxelTurretBarrelCache), viewRect, turretPoint, matrixbarrel,
 							pCell->Intensity_Normal, 0, 0);
 				}
 			}
@@ -407,12 +405,12 @@ void FoggedObject::RenderAsBuilding(const RectangleStruct& viewRect) const
 				Vector3D<float> negativevector = { -matrixbarrel.Row[0].W ,-matrixbarrel.Row[1].W,-matrixbarrel.Row[2].W };
 				Vector3D<float> vector = { matrixbarrel.Row[0].W ,matrixbarrel.Row[1].W,matrixbarrel.Row[2].W };
 				matrixbarrel.Translate(negativevector);
-				matrixbarrel.RotateZ(static_cast<float>(BuildingData.PrimaryFacing.current().get_radian()));
-				matrixbarrel.RotateY(-static_cast<float>(BuildingData.BarrelFacing.current().get_radian()));
+				matrixbarrel.RotateZ(static_cast<float>(BuildingData.PrimaryFacing.Current().GetRadian<1>()));
+				matrixbarrel.RotateY(-static_cast<float>(BuildingData.BarrelFacing.Current().GetRadian<1>()));
 				matrixbarrel.Translate(vector);
-				Matrix3D::MatrixMultiply(&matrixbarrel, &Matrix3D::VoxelDefaultMatrix, &matrixbarrel);
+				Matrix3D::__MatrixMultiply(&matrixbarrel, &Matrix3D::VoxelDefaultMatrix, &matrixbarrel);
 				pVXLDrawer->DrawVoxel(BuildingData.Type->BarrelVoxel, barrelFacing, (short)barrelExtra,
-					BuildingData.Type->VoxelCaches[3], viewRect, turretPoint, matrixbarrel,
+					(IndexClass<int, int>&)(BuildingData.Type->VoxelTurretBarrelCache), viewRect, turretPoint, matrixbarrel,
 					pCell->Intensity_Normal, 0, 0);
 			}
 		}
@@ -464,8 +462,7 @@ void FoggedObject::RenderAsOverlay(const RectangleStruct& viewRect) const
 			(((pCell->MapCoords.Y << 8) + 128) / 256) << 8,
 			0
 		};
-		Point2D position;
-		TacticalClass::Instance->CoordsToClient(coords, &position);
+		auto [position, visible] = TacticalClass::Instance->CoordsToClient(coords);
 		position.X -= 30;
 
 		std::swap(pCell->OverlayTypeIndex, const_cast<FoggedObject*>(this)->OverlayData.Overlay);
@@ -484,8 +481,7 @@ void FoggedObject::RenderAsTerrain(const RectangleStruct& viewRect) const
 	if (auto pSHP = TerrainData.Type->GetImage())
 	{
 		int nZAdjust = -TacticalClass::AdjustForZ(Location.Z);
-		Point2D point;
-		TacticalClass::Instance->CoordsToClient(Location, &point);
+		auto [point, visible] = TacticalClass::Instance->CoordsToClient(Location);
 		point.X += DSurface::ViewBounds->X - viewRect.X;
 		point.Y += DSurface::ViewBounds->Y - viewRect.Y;
 		if (!pCell->LightConvert)
