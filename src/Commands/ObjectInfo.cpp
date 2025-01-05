@@ -192,7 +192,7 @@ void ObjectInfoCommandClass::Execute(WWKey eInput) const
 				if (i != 0)
 					append(", ");
 
-				append("Slot %d = %s", i+1, pBuilding->Upgrades[i] ? pBuilding->Upgrades[i]->get_ID() : "<none>");
+				append("Slot %d = %s", i + 1, pBuilding->Upgrades[i] ? pBuilding->Upgrades[i]->get_ID() : "<none>");
 			}
 			append("\n");
 		}
@@ -248,7 +248,8 @@ void ObjectInfoCommandClass::Execute(WWKey eInput) const
 			dumpInfo(pTechno);
 	}
 
-	if (!dumped){
+	if (!dumped)
+	{
 		if (ObjectClass::CurrentObjects->Count > 0)
 		{
 			if (ObjectClass::CurrentObjects->Count != 1)
